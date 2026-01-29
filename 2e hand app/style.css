@@ -1,0 +1,140 @@
+/* Reset */
+:root {
+  --pcpo-red: #38B6FF;
+  --pcpo-yellow: #F5C400;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-image: url('images/wat-is-pcpo.png');
+  background-size: cover;
+  background-position: center 30%;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+}
+
+/* MENU TOGGLE */
+#menuToggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  border: 2px solid var(--pcpo-red);
+  background: white;
+  color: var(--pcpo-red);
+  cursor: pointer;
+  font-size: 18px;
+  transition: transform 0.3s ease, right 0.3s ease;
+  z-index: 1000;
+  transform: rotate(180deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#menuToggle.open {
+  transform: rotate(0deg);
+  right: 280px;
+}
+
+/* SIDE MENU – FULL HEIGHT */
+#sideMenu {
+  position: fixed;
+  top: 0;                 /* START BOVENAAN PAGINA */
+  right: -280px;
+  width: 260px;
+  height: 100vh;          /* EXACT PAGINAHOOGTE */
+  background: var(--pcpo-red);
+  border-radius: 35px 35px 0 0; /* alleen boven afgerond */
+  padding-top: 70px;
+  transition: right 0.3s ease;
+  box-shadow: -4px 0 15px rgba(0,0,0,0.3);
+  overflow: hidden;
+  z-index: 999;
+}
+
+/* White inner panel – TOT EXACT EINDE, GEEN RONDINGEN */
+#sideMenu::before {
+  content: "";
+  position: absolute;
+  top: 70px;
+  left: 0;
+  right: 0;
+  bottom: 0;              /* EXACT TOT ONDERAAN PAGINA */
+  background: white;
+  border-radius: 0;       /* GEEN RONDINGEN */
+  z-index: 0;
+}
+
+/* Menu open */
+#sideMenu.open {
+  right: 0;
+}
+
+/* Menu links */
+#sideMenu a {
+  position: relative;
+  z-index: 1;
+  display: block;
+  margin: 16px 20px;
+  padding: 16px 0;
+  background: var(--pcpo-red);
+  color: white;
+  text-decoration: none;
+  text-align: center;
+  font-weight: bold;
+  font-size: 20px;
+  border-radius: 30px;
+  border: none;
+}
+
+
+
+/* Slideshow container */
+.slideshow-container {
+  max-width: 600px;
+  margin: 100px auto 0;
+  position: relative;
+}
+
+/* Slides */
+.slide {
+  display: none;
+}
+
+.slide img {
+  width: 100%;
+  border: clamp(12px, 5vw, 40px) solid var(--pcpo-yellow);
+  border-radius: 8px;
+}
+
+/* Welcome title */
+.welcome-title {
+  margin-top: 100px;
+  margin-bottom: 20px;
+  text-align: center;
+  color: var(--pcpo-yellow);
+  font-size: 72px;
+  font-weight: bold;
+}
+
+/* Fade animation */
+.fade {
+  animation: fadeEffect 2s;
+}
+
+@keyframes fadeEffect {
+  0% { opacity: 0; }
+  10% { opacity: 1; }
+  33% { opacity: 1; }
+  43% { opacity: 0; }
+  100% { opacity: 0; }
+}
