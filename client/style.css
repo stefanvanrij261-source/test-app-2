@@ -144,13 +144,10 @@ body {
 
 /* PHONE */
 @media (max-width: 767px) {
-  body {
-    background-image: url('images/telefoon-achtergrond-index.html.jpg') !important; /* force override */
-    background-size: cover;
-    background-position: center top;
-    background-repeat: no-repeat;
-    min-height: 100vh; /* ensure full viewport height */
+  body.index-page {
+    background-image: url('images/telefoon-achtergrond-index.html.jpg') !important;
   }
+
 
   .welcome-title {
     font-size: 72px;
