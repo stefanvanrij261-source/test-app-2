@@ -144,6 +144,13 @@ body {
 
 /* PHONE */
 @media (max-width: 767px) {
+  body {
+    background-image: url('images/telefoon-achtergrond-index.html.jpg'); /* new phone-specific image */
+    background-size: cover;
+    background-position: center 30%;
+    background-repeat: no-repeat;
+  }
+
   .welcome-title {
     font-size: 72px;
   }
@@ -166,6 +173,7 @@ body {
     font-size: 20px;
   }
 }
+
 
 /* TABLET (iPad) */
 @media (min-width: 768px) and (max-width: 1023px) {
