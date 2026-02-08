@@ -145,10 +145,11 @@ body {
 /* PHONE */
 @media (max-width: 767px) {
   body {
-    background-image: url('images/telefoon-achtergrond-index.html.jpg'); /* new phone-specific image */
+    background-image: url('images/phone-background.png') !important; /* force override */
     background-size: cover;
-    background-position: center 30%;
+    background-position: center top;
     background-repeat: no-repeat;
+    min-height: 100vh; /* ensure full viewport height */
   }
 
   .welcome-title {
