@@ -7,15 +7,29 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body class="pagina1-page">
-<body style="
-  margin: 0;
-  height: 100vh;
-  background-image: url('images/PCPO.rotonde.png');
-  background-size: cover;
-  background-repeat: no-repeat;
-  ">
-</body>
-<body>
+ <button
+    id="videoCubeTrigger"
+    class="video-cube"
+    type="button"
+    aria-label="Open video in volledig scherm"
+    title="Bekijk de video"
+  >
+    <img src="https://img.youtube.com/vi/Y0fItGyUNPs/hqdefault.jpg" alt="Thumbnail van de video" class="video-cube__thumbnail">
+    <span class="video-cube__play">▶</span>
+  </button>
+
+  <div id="videoModal" class="video-modal" aria-hidden="true">
+    <button id="videoModalClose" class="video-modal__close" type="button" aria-label="Sluit video">✕</button>
+    <iframe
+      id="videoModalFrame"
+      class="video-modal__frame"
+      src=""
+      title="PCPO video"
+      allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+      allowfullscreen
+      referrerpolicy="strict-origin-when-cross-origin"
+    ></iframe>
+  </div>
   <button
     id="videoCubeTrigger"
     class="video-cube"

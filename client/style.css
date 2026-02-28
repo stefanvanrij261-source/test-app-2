@@ -28,12 +28,10 @@ body {
 
 .video-cube {
   position: fixed;
-  top: 0;
-  left: 6%;
-  width: 14%;
-  height: 28%;
-  min-width: 120px;
-  min-height: 110px;
+  top: 2.5vh;
+  left: 7.5vw;
+  width: clamp(105px, 11vw, 175px);
+  aspect-ratio: 1 / 1;
   z-index: 10;
   border: 0;
   padding: 0;
@@ -87,8 +85,10 @@ body {
 }
 
 .video-modal__frame {
-  width: min(96vw, 1400px);
-  height: min(90vh, 790px);
+  width: min(94vw, 1280px);
+  aspect-ratio: 16 / 9;
+  height: auto;
+  max-height: 90vh;
   border: 0;
 }
 
@@ -106,6 +106,7 @@ body {
   line-height: 1;
   cursor: pointer;
 }
+
 /* MENU TOGGLE */
 #menuToggle {
   position: fixed;
