@@ -3,10 +3,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const toggleButton = document.getElementById("menuToggle");
   const sideMenu = document.getElementById("sideMenu");
 
-  toggleButton.addEventListener("click", () => {
-    sideMenu.classList.toggle("open");
-    toggleButton.classList.toggle("open");
-  });
+ if (toggleButton && sideMenu) {
+    toggleButton.addEventListener("click", () => {
+      sideMenu.classList.toggle("open");
+      toggleButton.classList.toggle("open");
+    });
+  }
 
   // Slideshow
   let slideIndex = 0;
@@ -21,7 +23,44 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   if (slides.length > 0) showSlides();
+  const videoTrigger = document.getElementById("videoCubeTrigger");
+  const videoModal = document.getElementById("videoModal");
+  const videoFrame = document.getElementById("videoModalFrame");
+  const videoClose = document.getElementById("videoModalClose");
+  const videoEmbedUrl = "https://www.youtube.com/embed/Y0fItGyUNPs?autoplay=1&rel=0";
 
+  function openVideoModal() {
+    if (!videoModal || !videoFrame) return;
+    videoFrame.src = videoEmbedUrl;
+    videoModal.classList.add("open");
+    videoModal.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeVideoModal() {
+    if (!videoModal || !videoFrame) return;
+    videoModal.classList.remove("open");
+    videoModal.setAttribute("aria-hidden", "true");
+    videoFrame.src = "";
+    document.body.style.overflow = "";
+  }
+
+  if (videoTrigger && videoModal && videoFrame && videoClose) {
+    videoTrigger.addEventListener("click", openVideoModal);
+    videoClose.addEventListener("click", closeVideoModal);
+
+    videoModal.addEventListener("click", (event) => {
+      if (event.target === videoModal) {
+        closeVideoModal();
+      }
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && videoModal.classList.contains("open")) {
+        closeVideoModal();
+      }
+    });
+  }
   /* =========================
      DEVICE DETECTION (ADDED)
      ========================= */
