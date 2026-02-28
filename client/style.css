@@ -28,16 +28,18 @@ body {
 
 .video-cube {
   position: fixed;
-  top: 2.5vh;
-  left: 7.5vw;
-  width: clamp(105px, 11vw, 175px);
+  top: 0vh;
+  left: 4.25vw;
+  width: clamp(200px, 20vw, 409px);
   aspect-ratio: 1 / 1;
   z-index: 10;
-  border: 0;
+  border: 3px solid rgba(255, 255, 255, 0.65);
+  border-radius: 6px;
   padding: 0;
-  background: transparent;
+  background: #000;
   cursor: pointer;
   overflow: hidden;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.45);
 }
 
 .video-cube__thumbnail {
@@ -49,18 +51,19 @@ body {
 
 .video-cube__play {
   position: absolute;
-  right: 10px;
-  bottom: 8px;
-  width: 32px;
-  height: 32px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 64px;
+  height: 64px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.72);
   color: #fff;
-  font-size: 16px;
-  pointer-events: none;
+  font-size: 30px;
+  border: 2px solid rgba(255, 255, 255, 0.75);
 }
 
 .video-cube:focus-visible,
@@ -85,10 +88,10 @@ body {
 }
 
 .video-modal__frame {
-  width: min(94vw, 1280px);
+  width: min(96vw, 1400px);
   aspect-ratio: 16 / 9;
   height: auto;
-  max-height: 90vh;
+  max-height: 92vh;
   border: 0;
 }
 
@@ -315,3 +318,4 @@ body {
     font-size: 22px;
   }
 }
+/*canyoureadthis?/
