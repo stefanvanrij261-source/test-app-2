@@ -19,7 +19,39 @@ body {
   background-repeat: no-repeat;
   min-height: 100vh;
 }
+.pagina1-car {
+  position: fixed;
+  left: 14vw;
+  top: 92vh;
+  width: clamp(180px, 24vw, 360px);
+  height: auto;
+  z-index: 20;
+  pointer-events: none;
+  animation: drive-roundabout 14s linear infinite;
+  transform-origin: center center;
+}
 
+@keyframes drive-roundabout {
+  0% {
+    left: 11vw;
+    bottom: 12vh;
+    transform: rotate(-10deg);
+    opacity: 1;
+  }
+  70% {
+    left: 11vw;
+    bottom: 12vh;
+    transform: rotate(-10deg);
+    opacity: 1;
+  }
+  90% {
+    left: 17vw;
+    top: 51vh;
+    transform: rotate(-30deg);
+    opacity: 0;
+  
+  }
+}
 .pagina1-page {
   background-image: url('images/PCPO.rotonde.png');
   background-size: cover;
