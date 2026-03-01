@@ -31,7 +31,7 @@ body {
   transform-origin: center center;
 }
 
-@keyframes drive-roundabout {
+/*@keyframes drive-roundabout {
   0% {
     left: 11vw;
     bottom: 12vh;
@@ -51,7 +51,7 @@ body {
     opacity: 0;
   
   }
-}
+}*/
 .pagina1-page {
   background-image: url('images/PCPO.rotonde.png');
   background-size: cover;
@@ -258,7 +258,45 @@ body {
   43% { opacity: 0; }
   100% { opacity: 0; }
 }
+.slideshow-container2 {
+  max-width: 1190px;
+  margin: 90px auto 0;
+  position: cover;
+}
 
+/* Slides */
+.slide {
+  display: none;
+}
+
+.slide img {
+  width: 100%;
+  border: clamp(00px, 0vw, 0px) solid var(--pcpo-red);
+  border-radius: 0px;
+}
+
+/* Welcome title */
+.welcome-title {
+  margin-top: 0px;
+  margin-bottom: 20px;
+  text-align: center;
+  color: var(--pcpo-yellow);
+  font-size: 72px;
+  font-weight: bold;
+}
+
+/* Fade animation */
+.fade {
+  animation: fadeEffect 2s;
+}
+
+@keyframes fadeEffect {
+  0% { opacity: 0; }
+  10% { opacity: 1; }
+  33% { opacity: 1; }
+  43% { opacity: 0; }
+  100% { opacity: 0; }
+}
 /* =========================
    DEVICE-SPECIFIC VERSIONS
    ADDITIVE ONLY
@@ -350,4 +388,19 @@ body {
     font-size: 22px;
   }
 }
-/*canyoureadthis?/
+/*canyoureadthis?*/
+
+.top-overlay-image {
+  position: absolute;
+  top: 300px;
+  left: 50%;
+  width: min(92vw, 1100px);
+  height: clamp(220px, 55vh, 700px);
+  transform: translateX(-50%);
+  background-image: url('images/text.achtergrond.png');
+  background-size: contain;
+  background-position: center top;
+  background-repeat: no-repeat;
+  z-index: 3000;
+  pointer-events: none;
+}

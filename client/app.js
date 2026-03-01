@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const toggleButton = document.getElementById("menuToggle");
   const sideMenu = document.getElementById("sideMenu");
 
- if (toggleButton && sideMenu) {
+if (toggleButton && sideMenu) {
     toggleButton.addEventListener("click", () => {
       sideMenu.classList.toggle("open");
       toggleButton.classList.toggle("open");
