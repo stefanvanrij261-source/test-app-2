@@ -1,16 +1,36 @@
+<!DOCTYPE html>
 <html lang="nl">
 <head>
   <meta charset="UTF-8">
   <title>Onze scholen</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""
+  >
 </head>
 <body>
 
   <h1 style="text-align: center; color: #38B6FF; margin-top: 50px;">Onze scholen</h1>
 
-</body>
-</html>
+ <section style="max-width: 900px; margin: 40px auto; padding: 0 20px; text-align: center;">
+    <h2 style="color: #1f2937; margin-bottom: 16px;">Locatie: Achterom 70, Barendrecht</h2>
+    <iframe
+      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d11721.932024811978!2d4.537814833002593!3d51.85670839299345!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47c43223ff24d0f7%3A0x43f3f758d78ecf24!2sAchterom%2070%2C%202991%20CV%20Barendrecht!5e0!3m2!1snl!2snl!4v1772373857068!5m2!1snl!2snl"
+      width="100%"
+      height="450"
+      style="border:0; border-radius: 12px;"
+      allowfullscreen=""
+      loading="lazy"
+      referrerpolicy="no-referrer-when-downgrade">
+    </iframe>
+  </section>
+
+  <!-- Arrow button -->
+  <button id="menuToggle">➤</button>
 
   <!-- Side menu -->
   <nav id="sideMenu">
@@ -40,11 +60,79 @@
     </div>
   </div>
 
-  <script src="app.js"></script>
-</body>
-</html>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script>
+    const schoolLocations = [
+      { name: 'CBS De Ark', address: 'Klipper 108-109, 2991 KM Barendrecht, Nederland' },
+      { name: 'CBS De Bongerd', address: 'Patrijs 28-29, 2986 CA Ridderkerk, Nederland' },
+      { name: 'CBS De Fontein', address: 'Scheldeplein 4, 2987 EL Ridderkerk, Nederland' },
+      { name: 'CBS De Hoeksteen', address: 'Kruidentuin 6a, 2991 RK Barendrecht, Nederland' },
+      { name: 'CBS De Klimop', address: 'Meester Treubstraat 3, 2982 VN Ridderkerk, Nederland' },
+      { name: 'CBS De Regenboog', address: 'Reijerweg 60, 2983 AT Ridderkerk, Nederland' },
+      { name: 'CBS De Vrijenburg', address: 'Vrijenburglaan 61, 2994 CD Barendrecht, Nederland' },
+      { name: 'CBS De Wingerd', address: 'Da Costalaan 3, 2985 BC Ridderkerk, Nederland' },
+      { name: 'CBS Groen van Prinsterer (Stellingmolen)', address: 'Stellingmolen 10, 2992 DN Barendrecht, Nederland' },
+      { name: 'CBS Groen van Prinsterer (Hof van Maxima)', address: 'Hedwigepolder 2, 2992 TS Barendrecht, Nederland' },
+      { name: 'CBS Het Kompas', address: 'Hoefslag 20, 2992 VH Barendrecht, Nederland' },
+      { name: 'CBS Smitshoek (Riederhof)', address: 'Riederhof 37, 2993 XJ Barendrecht, Nederland' },
+      { name: 'CBS Smitshoek (Brandsma-akker)', address: 'Brandsma-akker 3, 2994 AA Barendrecht, Nederland' },
+      { name: 'CBS Smitshoek (Kouwenhoven-akker)', address: 'Kouwenhoven-akker 14, 2994 AS Barendrecht, Nederland' },
+      { name: 'PCPO Bestuursbureau', address: 'Achterom 70, 2991 CV Barendrecht, Nederland' }
+    ];
 
   <!-- Arrow button -->
   <button id="menuToggle">➤</button>
 
+const map = L.map('schoolMap').setView([52.1326, 5.2913], 8);
 
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    const bounds = L.latLngBounds();
+
+    async function geocodeAddress(address) {
+      const endpoint = `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(address)}`;
+      const response = await fetch(endpoint, {
+        headers: {
+          Accept: 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error(`Kon locatie niet ophalen: ${response.status}`);
+      }
+
+      const data = await response.json();
+      if (!data.length) {
+        throw new Error('Geen resultaat gevonden');
+      }
+
+      return [parseFloat(data[0].lat), parseFloat(data[0].lon)];
+    }
+
+    async function addSchoolMarkers() {
+      for (const school of schoolLocations) {
+        try {
+          const coords = await geocodeAddress(school.address);
+          const marker = L.marker(coords).addTo(map);
+          marker.bindPopup(`<strong>${school.name}</strong>`);
+          bounds.extend(coords);
+        } catch (error) {
+          console.warn(`Locatie overgeslagen voor ${school.name}:`, error.message);
+        }
+
+        await new Promise((resolve) => setTimeout(resolve, 450));
+      }
+
+      if (bounds.isValid()) {
+        map.fitBounds(bounds.pad(0.12));
+      }
+    }
+
+    addSchoolMarkers();
+  </script>
+  <script src="app.js"></script>
+</body>
+</html>
