@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Onze scholen</title>
-  <link rel="stylesheet" href="style.css">
   <link
     rel="stylesheet"
     href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -12,100 +11,319 @@
     crossorigin=""
   >
   <style>
-    #schoolMap {
-      height: 500px;
+    :root {
+      --blue: #38B6FF;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --bg-soft: #f8fafc;
+      --white: #ffffff;
+      --border: #d1d5db;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      color: var(--text);
+      background: #f3f7fb;
+      line-height: 1.4;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 28px auto 42px;
+      padding: 0 16px;
+    }
+
+    h1 {
+      text-align: center;
+      color: var(--blue);
+      margin: 8px 0 24px;
+      font-size: clamp(1.7rem, 3vw, 2.3rem);
+    }
+
+    .card {
+      background: var(--white);
+      border-radius: 14px;
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+      padding: 16px;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    #addressInput {
       width: 100%;
+      padding: 12px 13px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 16px;
+    }
+
+    #searchButton {
+      border: none;
+      border-radius: 10px;
+      padding: 12px 18px;
+      background: var(--blue);
+      color: var(--white);
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    #schoolMap {
+      width: 100%;
+      height: 540px;
       border-radius: 12px;
-      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.12);
+      box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.06);
+      margin: 10px 0 14px;
+    }
+
+    #statusMessage {
+      margin: 0;
+      min-height: 22px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .results-title {
+      margin: 8px 0 8px;
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    #nearestSchools {
+      list-style-position: inside;
+      margin: 0;
+      padding: 10px 12px;
+      background: var(--bg-soft);
+      border-radius: 10px;
+    }
+
+    #nearestSchools li {
+      padding: 3px 0;
+    }
+
+    .hint {
+      margin-top: 10px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    @media (max-width: 720px) {
+      .controls {
+        grid-template-columns: 1fr;
+      }
+
+      #searchButton {
+        width: 100%;
+      }
+
+      #schoolMap {
+        height: 460px;
+      }
     }
   </style>
 </head>
 <body>
-  <h1 style="text-align: center; color: #38B6FF; margin-top: 50px;">Onze scholen</h1>
+  <main class="page">
+    <h1>Onze scholen</h1>
 
-  <section style="max-width: 900px; margin: 40px auto; padding: 0 20px; text-align: center;">
-    <h2 style="color: #1f2937; margin-bottom: 16px;">Alle scholen op de kaart</h2>
-    <div id="schoolMap" aria-label="Kaart met schoollocaties"></div>
-  </section>
+    <section class="card" aria-label="Kaart en schoolzoeker">
+      <div class="controls">
+        <input id="addressInput" type="text" placeholder="Vul adres in" aria-label="Vul adres in">
+        <button id="searchButton" type="button">Zoeken</button>
+      </div>
 
-  <!-- Arrow button -->
-  <button id="menuToggle">➤</button>
+      <p id="statusMessage" aria-live="polite"></p>
+      <div id="schoolMap" aria-label="Kaart met schoollocaties"></div>
 
-  <!-- Side menu -->
-  <nav id="sideMenu">
-    <a href="pagina1.html">Schoolinformatie</a>
-    <a href="pagina2.html">Welke school past bij jouw kind?</a>
-    <a href="pagina3.html">Onze scholen</a>
-    <a href="pagina4.html">Contact</a>
-    <a href="index.html" style="padding: 40px; display:block;"> home </a>
-  </nav>
-
-  <!-- Slideshow -->
-  <div class="slideshow-container">
-    <div class="slide">
-      <img src="images/logo.png" alt="PCPO logo">
-    </div>
-    <div class="slide">
-      <img src="images/de-ark.png" alt="CBS De Ark">
-    </div>
-    <div class="slide">
-      <img src="images/de-bongerd.png" alt="CBS De Bongerd">
-    </div>
-    <div class="slide">
-      <img src="images/groen-van-prinsterer.png" alt="CBS Groen van Prinsterer">
-    </div>
-    <div class="slide">
-      <img src="images/de-hoeksteen.jpg" alt="CBS De Hoeksteen">
-    </div>
-  </div>
+      <p class="results-title">Scholen op afstand (dichtstbij eerst)</p>
+      <ol id="nearestSchools"></ol>
+      <p class="hint">Tip: beweeg met je muis over een blauwe marker om naam en adres te zien.</p>
+    </section>
+  </main>
 
   <script
     src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
     crossorigin=""
   ></script>
+
   <script>
-    // Vaste coordinaten zodat de kaart altijd direct werkt (zonder externe geocode calls)
     const schoolLocations = [
-      { name: 'CBS De Ark', address: 'Klipper 108-109, 2991 KM Barendrecht', lat: 51.8585, lon: 4.5432 },
-      { name: 'CBS De Bongerd', address: 'Patrijs 28-29, 2986 CA Ridderkerk', lat: 51.8736, lon: 4.6116 },
-      { name: 'CBS De Fontein', address: 'Scheldeplein 4, 2987 EL Ridderkerk', lat: 51.8619, lon: 4.6319 },
-      { name: 'CBS De Hoeksteen', address: 'Kruidentuin 6a, 2991 RK Barendrecht', lat: 51.8518, lon: 4.5459 },
-      { name: 'CBS De Klimop', address: 'Meester Treubstraat 3, 2982 VN Ridderkerk', lat: 51.8780, lon: 4.5908 },
-      { name: 'CBS De Regenboog', address: 'Reijerweg 60, 2983 AT Ridderkerk', lat: 51.8891, lon: 4.6038 },
-      { name: 'CBS De Vrijenburg', address: 'Vrijenburglaan 61, 2994 CD Barendrecht', lat: 51.8477, lon: 4.5344 },
-      { name: 'CBS De Wingerd', address: 'Da Costalaan 3, 2985 BC Ridderkerk', lat: 51.8651, lon: 4.5894 },
-      { name: 'CBS Groen van Prinsterer (Stellingmolen)', address: 'Stellingmolen 10, 2992 DN Barendrecht', lat: 51.8561, lon: 4.5237 },
-      { name: 'CBS Groen van Prinsterer (Hof van Maxima)', address: 'Hedwigepolder 2, 2992 TS Barendrecht', lat: 51.8521, lon: 4.5249 },
-      { name: 'CBS Het Kompas', address: 'Hoefslag 20, 2992 VH Barendrecht', lat: 51.8578, lon: 4.5178 },
-      { name: 'CBS Smitshoek (Riederhof)', address: 'Riederhof 37, 2993 XJ Barendrecht', lat: 51.8380, lon: 4.5524 },
-      { name: 'CBS Smitshoek (Brandsma-akker)', address: 'Brandsma-akker 3, 2994 AA Barendrecht', lat: 51.8446, lon: 4.5411 },
-      { name: 'CBS Smitshoek (Kouwenhoven-akker)', address: 'Kouwenhoven-akker 14, 2994 AS Barendrecht', lat: 51.8455, lon: 4.5440 },
-      { name: 'PCPO Bestuursbureau', address: 'Achterom 70, 2991 CV Barendrecht', lat: 51.8567, lon: 4.5478 }
+      { name: 'CBS De Ark', address: 'Klipper 108-109, 2991 KM Barendrecht', lat: 51.85761, lon: 4.55236 },
+      { name: 'CBS De Bongerd', address: 'Patrijs 28-29, 2986 CA Ridderkerk', lat: 51.86676, lon: 4.61229 },
+      { name: 'CBS De Fontein', address: 'Scheldeplein 4, 2987 EL Ridderkerk', lat: 51.86239, lon: 4.62911 },
+      { name: 'CBS De Hoeksteen', address: 'Kruidentuin 6A, 2991 RK Barendrecht', lat: 51.85357, lon: 4.54827 },
+      { name: 'CBS De Klimop', address: 'Meester Treubstraat 3, 2982 VN Ridderkerk', lat: 51.88005, lon: 4.59136 },
+      { name: 'CBS De Regenboog', address: 'Reijerweg 60, 2983 AT Ridderkerk', lat: 51.88771, lon: 4.60384 },
+      { name: 'CBS De Vrijenburg', address: 'Vrijenburglaan 61, 2994 CD Barendrecht', lat: 51.85077, lon: 4.53266 },
+      { name: 'CBS De Wingerd', address: 'Da Costalaan 3, 2985 BC Ridderkerk', lat: 51.86522, lon: 4.58659 },
+      { name: 'CBS Groen van Prinsterer (Stellingmolen)', address: 'Stellingmolen 10, 2992 DN Barendrecht', lat: 51.85462, lon: 4.52245 },
+      { name: 'CBS Groen van Prinsterer (Hof van Maxima)', address: 'Hedwigepolder 2, 2992 TS Barendrecht', lat: 51.85145, lon: 4.52309 },
+      { name: 'CBS Het Kompas', address: 'Hoefslag 20, 2992 VH Barendrecht', lat: 51.85721, lon: 4.51674 },
+      { name: 'CBS Smitshoek (Riederhof)', address: 'Riederhof 37, 2993 XJ Barendrecht', lat: 51.83625, lon: 4.55314 },
+      { name: 'CBS Smitshoek (Brandsma-akker)', address: 'Brandsma-akker 3, 2994 AA Barendrecht', lat: 51.84456, lon: 4.54091 },
+      { name: 'CBS Smitshoek (Kouwenhoven-akker)', address: 'Kouwenhoven-akker 14, 2994 AS Barendrecht', lat: 51.84516, lon: 4.54438 },
+      { name: 'PCPO Bestuursbureau', address: 'Achterom 70, 2991 CV Barendrecht', lat: 51.85799, lon: 4.54553 }
     ];
 
-    const map = L.map('schoolMap').setView([51.8567, 4.5478], 12);
+    const map = L.map('schoolMap').setView([51.8575, 4.55], 12);
+    const addressInput = document.getElementById('addressInput');
+    const searchButton = document.getElementById('searchButton');
+    const statusMessage = document.getElementById('statusMessage');
+    const nearestSchools = document.getElementById('nearestSchools');
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
       attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
-    const bounds = L.latLngBounds();
+    let userMarker = null;
+    const schoolMarkersLayer = L.layerGroup().addTo(map);
 
-    schoolLocations.forEach((school) => {
-      const coords = [school.lat, school.lon];
-      L.marker(coords)
-        .addTo(map)
-        .bindPopup(`<strong>${school.name}</strong><br>${school.address}`);
-      bounds.extend(coords);
+    const redIcon = new L.Icon({
+      iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
+      shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+      shadowSize: [41, 41]
     });
 
-    if (bounds.isValid()) {
-      map.fitBounds(bounds.pad(0.12));
+    function setStatus(message) {
+      statusMessage.textContent = message;
     }
-  </script>
 
-  <script src="app.js"></script>
+    function haversineDistanceKm(lat1, lon1, lat2, lon2) {
+      const toRad = (deg) => deg * (Math.PI / 180);
+      const earthRadiusKm = 6371;
+      const dLat = toRad(lat2 - lat1);
+      const dLon = toRad(lon2 - lon1);
+      const a = Math.sin(dLat / 2) ** 2
+        + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      return earthRadiusKm * c;
+    }
+
+    function renderSchoolMarkers() {
+      const bounds = L.latLngBounds();
+
+      schoolLocations.forEach((school) => {
+        const marker = L.marker([school.lat, school.lon]).addTo(schoolMarkersLayer);
+
+        marker.bindTooltip(`<strong>${school.name}</strong><br>${school.address}`, {
+          direction: 'top',
+          sticky: true,
+          opacity: 0.95
+        });
+
+        marker.on('mouseover', () => marker.openTooltip());
+        marker.on('mouseout', () => marker.closeTooltip());
+
+        bounds.extend([school.lat, school.lon]);
+      });
+
+      if (bounds.isValid()) {
+        map.fitBounds(bounds.pad(0.12));
+      }
+    }
+
+    function renderNearestSchools(userLat, userLon) {
+      nearestSchools.innerHTML = '';
+
+      const sortedSchools = schoolLocations
+        .map((school) => ({
+          ...school,
+          distance: haversineDistanceKm(userLat, userLon, school.lat, school.lon)
+        }))
+        .sort((a, b) => a.distance - b.distance);
+
+      sortedSchools.forEach((school) => {
+        const li = document.createElement('li');
+        li.textContent = `${school.name} - ${school.distance.toFixed(2)} km`;
+        nearestSchools.appendChild(li);
+      });
+    }
+
+    async function geocodeAddress(address) {
+      const query = encodeURIComponent(`${address}, Nederland`);
+      const endpoint = `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${query}`;
+
+      const response = await fetch(endpoint, {
+        headers: {
+          'Accept-Language': 'nl'
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Adres opzoeken mislukt');
+      }
+
+      const data = await response.json();
+      if (!data.length) {
+        return null;
+      }
+
+      return {
+        lat: Number(data[0].lat),
+        lon: Number(data[0].lon)
+      };
+    }
+
+    async function handleSearch() {
+      const inputValue = addressInput.value.trim();
+      if (!inputValue) {
+        setStatus('Vul eerst een adres in.');
+        return;
+      }
+
+      setStatus('Adres zoeken...');
+
+      try {
+        const location = await geocodeAddress(inputValue);
+        if (!location) {
+          setStatus('Adres niet gevonden. Probeer een vollediger adres.');
+          return;
+        }
+
+        if (userMarker) {
+          map.removeLayer(userMarker);
+        }
+
+        userMarker = L.marker([location.lat, location.lon], { icon: redIcon }).addTo(map);
+        userMarker.bindTooltip('Jouw adres', {
+          direction: 'top',
+          sticky: true,
+          opacity: 0.95
+        }).openTooltip();
+
+        renderNearestSchools(location.lat, location.lon);
+        map.setView([location.lat, location.lon], 13);
+        setStatus('Adres gevonden. Scholen staan hieronder van dichtbij naar verder.');
+      } catch (error) {
+        console.error(error);
+        setStatus('Zoeken mislukt. Controleer het adres en probeer opnieuw.');
+      }
+    }
+
+    searchButton.addEventListener('click', handleSearch);
+    addressInput.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        handleSearch();
+      }
+    });
+
+    renderSchoolMarkers();
+    setStatus('Beweeg met de muis over een marker om naam en adres te zien.');
+  </script>
 </body>
 </html>
