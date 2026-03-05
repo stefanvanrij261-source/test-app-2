@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Onze scholen</title>
-    <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css">
   <link
     rel="stylesheet"
     href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -19,72 +19,170 @@
       --bg-soft: #f8fafc;
       --white: #ffffff;
       --border: #d1d5db;
+      --accent: #e11d48;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', Arial, sans-serif;
       color: var(--text);
-      background: #f3f7fb;
-      line-height: 1.4;
+      background:
+        radial-gradient(circle at 12% 12%, rgba(56, 182, 255, 0.26), transparent 40%),
+        radial-gradient(circle at 88% 0%, rgba(17, 163, 198, 0.2), transparent 35%),
+        linear-gradient(170deg, #eef8ff 0%, #f7fbff 55%, #eef6ff 100%);
+      line-height: 1.45;
     }
 
     .page {
-      max-width: 1100px;
-      margin: 28px auto 42px;
-      padding: 0 16px;
+      max-width: 1280px;
+      margin: 34px auto 56px;
+      padding: 0 22px;
     }
 
     h1 {
       text-align: center;
-      color: var(--blue);
-      margin: 8px 0 24px;
-      font-size: clamp(1.7rem, 3vw, 2.3rem);
+      color: #0e5c92;
+      margin: 4px 0 26px;
+      font-size: clamp(2rem, 3.2vw, 2.7rem);
+      letter-spacing: 0.3px;
+      text-shadow: 0 2px 10px rgba(56, 182, 255, 0.22);
     }
 
     .card {
-      background: var(--white);
-      border-radius: 14px;
-      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
-      padding: 16px;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 22px;
+      border: 1px solid rgba(154, 202, 240, 0.55);
+      box-shadow: 0 20px 34px rgba(18, 70, 120, 0.12);
+      padding: 18px;
     }
 
     .controls {
       display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 10px;
-      margin-bottom: 10px;
+      grid-template-columns: 1fr auto auto;
+      gap: 12px;
+      margin-bottom: 12px;
+      align-items: start;
+      position: relative;
     }
 
     #addressInput {
       width: 100%;
-      padding: 12px 13px;
-      border: 1px solid var(--border);
-      border-radius: 10px;
+      padding: 14px 16px;
+      border: 1px solid #b7d7f6;
+      border-radius: 999px;
       font-size: 16px;
+      background: #f9fdff;
+      box-shadow: inset 0 1px 3px rgba(56, 182, 255, 0.2);
     }
 
-    #searchButton {
+    #searchButton,
+    #fullscreenMapButton,
+    #openTopFilterButton,
+    #applyTopFilterButton {
       border: none;
-      border-radius: 10px;
+      border-radius: 999px;
       padding: 12px 18px;
-      background: var(--blue);
+      font-size: 14px;
+      background: linear-gradient(130deg, #0e7cc3, #13a3c6);
       color: var(--white);
       font-weight: 700;
+      letter-spacing: 0.2px;
       cursor: pointer;
+      box-shadow: 0 8px 16px rgba(10, 112, 173, 0.24);
+    }
+
+    .top-filter {
+      position: absolute;
+      top: 56px;
+      right: 0;
+      width: 280px;
+      padding: 14px;
+      border: 1px solid #b9daf8;
+      border-radius: 16px;
+      background: linear-gradient(175deg, #ffffff, #f4faff);
+      box-shadow: 0 16px 28px rgba(14, 108, 171, 0.22);
+      z-index: 700;
+      display: none;
+    }
+
+    .top-filter.open { display: block; }
+
+    .top-filter__title {
+      margin: 0 0 8px;
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .city-check {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 6px 0;
+      font-size: 15px;
+    }
+
+    .city-count {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 20px;
+      height: 20px;
+      border-radius: 999px;
+      background: #334155;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 0 6px;
+    }
+
+    #applyTopFilterButton {
+      width: 100%;
+      margin-top: 8px;
+      padding: 10px;
+      background: var(--accent);
+    }
+
+    .map-shell {
+      width: 100%;
+      margin: 10px 0 14px;
+      position: relative;
     }
 
     #schoolMap {
       width: 100%;
-      height: 540px;
-      border-radius: 12px;
-      box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.06);
-      margin: 10px 0 14px;
+      height: 470px;
+      border-radius: 18px;
+      box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.06), 0 12px 24px rgba(15, 23, 42, 0.12);
+      margin: 0;
     }
+
+    #fullscreenMapButton {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      z-index: 500;
+      padding: 8px 12px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.25);
+    }
+
+    .map-shell.is-fullscreen {
+      position: fixed;
+      inset: 18px;
+      isolation: isolate;
+      width: auto;
+      height: auto;
+      margin: 0;
+      z-index: 12000;
+      background: var(--white);
+      border-radius: 12px;
+      padding: 10px;
+      box-shadow: 0 18px 36px rgba(15, 23, 42, 0.35);
+    }
+
+    .map-shell.is-fullscreen #schoolMap { height: calc(100vh - 56px); }
 
     #statusMessage {
       margin: 0;
@@ -107,9 +205,7 @@
       border-radius: 10px;
     }
 
-    #nearestSchools li {
-      padding: 3px 0;
-    }
+    #nearestSchools li { padding: 3px 0; }
 
     .hint {
       margin-top: 10px;
@@ -117,18 +213,137 @@
       color: var(--muted);
     }
 
-    @media (max-width: 720px) {
-      .controls {
-        grid-template-columns: 1fr;
-      }
+    .school-cards-grid {
+      margin-top: 30px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
 
-      #searchButton {
+    .school-card {
+      position: relative;
+      background: linear-gradient(140deg, #0d3d66 0%, #11639e 55%, #13a3c6 100%);
+      border: 0;
+      border-radius: 22px;
+      overflow: hidden;
+      box-shadow: 0 18px 34px rgba(8, 55, 96, 0.28);
+      display: flex;
+      flex-direction: column;
+      min-height: 345px;
+      transform: perspective(900px) rotateX(0.3deg);
+    }
+
+    .school-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(120deg, rgba(255, 255, 255, 0.2), transparent 40%),
+        radial-gradient(circle at 85% 12%, rgba(255, 255, 255, 0.25), transparent 38%);
+      pointer-events: none;
+    }
+
+    .school-card__logo {
+      height: 124px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.93);
+      clip-path: polygon(0 0, 100% 0, 100% 82%, 0 100%);
+      padding: 16px;
+      z-index: 1;
+    }
+
+    .school-card__logo img {
+      max-width: 86%;
+      max-height: 92px;
+      object-fit: contain;
+      filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.18));
+    }
+
+    .school-card__body {
+      padding: 14px 16px 16px;
+      font-size: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      z-index: 1;
+      color: #f0f9ff;
+    }
+
+    .school-card__name {
+      margin: 0;
+      color: #ffffff;
+      font-size: 23px;
+      line-height: 1.15;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    }
+
+    .school-card__city {
+      display: inline-flex;
+      align-self: flex-start;
+      margin-top: 2px;
+      padding: 4px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.34);
+      color: #f6fdff;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      backdrop-filter: blur(2px);
+    }
+
+    .school-card__meta {
+      margin: 0;
+      color: #e0f5ff;
+      font-size: 13px;
+      line-height: 1.45;
+      max-width: 92%;
+    }
+
+    .school-card__actions {
+      margin-top: auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      padding-top: 8px;
+    }
+
+    .school-card__actions a {
+      text-align: center;
+      text-decoration: none;
+      padding: 10px 8px;
+      border-radius: 11px;
+      font-size: 12px;
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.9);
+      color: #0d4b79;
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+      box-shadow: 0 8px 14px rgba(7, 42, 69, 0.18);
+    }
+
+    .school-card__actions a:last-child {
+      background: #ffe26f;
+      color: #5f4200;
+    }
+
+    .school-card__actions a:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 18px rgba(5, 29, 49, 0.24);
+    }
+
+    @media (max-width: 720px) {
+      .controls { grid-template-columns: 1fr; }
+      #searchButton,
+      #openTopFilterButton { width: 100%; }
+      .top-filter {
+        position: static;
         width: 100%;
       }
-
-      #schoolMap {
-        height: 460px;
-      }
+      #schoolMap { height: 420px; }
+      .map-shell.is-fullscreen { inset: 8px; }
+      .map-shell.is-fullscreen #schoolMap { height: calc(100vh - 44px); }
     }
   </style>
 </head>
@@ -140,14 +355,35 @@
       <div class="controls">
         <input id="addressInput" type="text" placeholder="Vul adres in" aria-label="Vul adres in">
         <button id="searchButton" type="button">Zoeken</button>
+        <button id="openTopFilterButton" type="button">Filter locaties</button>
+
+        <div id="topFilterPanel" class="top-filter" aria-label="Filter locaties">
+          <p class="top-filter__title">Stad</p>
+          <label class="city-check" for="cityBarendrechtCheck">
+            <input id="cityBarendrechtCheck" type="checkbox" checked>
+            Barendrecht <span id="countBarendrecht" class="city-count">0</span>
+          </label>
+          <label class="city-check" for="cityRidderkerkCheck">
+            <input id="cityRidderkerkCheck" type="checkbox" checked>
+            Ridderkerk <span id="countRidderkerk" class="city-count">0</span>
+          </label>
+          <button id="applyTopFilterButton" type="button">Filter</button>
+        </div>
       </div>
 
       <p id="statusMessage" aria-live="polite"></p>
-      <div id="schoolMap" aria-label="Kaart met schoollocaties"></div>
+      <div id="mapShell" class="map-shell">
+        <button id="fullscreenMapButton" type="button">Schermvullend</button>
+        <div id="schoolMap" aria-label="Kaart met schoollocaties"></div>
+      </div>
 
       <p class="results-title">Scholen op afstand (dichtstbij eerst)</p>
       <ol id="nearestSchools"></ol>
       <p class="hint">Tip: beweeg met je muis over een blauwe marker om naam en adres te zien.</p>
+    </section>
+
+    <section aria-label="Scholenoverzicht">
+      <div id="schoolCardsGrid" class="school-cards-grid"></div>
     </section>
   </main>
 
@@ -159,28 +395,38 @@
 
   <script>
     const schoolLocations = [
-      { name: 'CBS De Ark', address: 'Klipper 108-109, 2991 KM Barendrecht', lat: 51.85667, lon: 4.53472 },
-      { name: 'CBS De Bongerd', address: 'Patrijs 28-29, 2986 CA Ridderkerk', lat: 51.8646633, lon: 4.6135642 },
-      { name: 'CBS De Fontein', address: 'Scheldeplein 4, 2987 EL Ridderkerk', lat: 51.8912258, lon: 4.5790103 },
-      { name: 'CBS De Hoeksteen', address: 'Kruidentuin 6A, 2991 RK Barendrecht', lat: 51.852674755859375, lon: 4.547271728515625 },
-      { name: 'CBS De Klimop', address: 'Meester Treubstraat 3, 2982 VN Ridderkerk', lat: 51.871284, lon: 4.5914643 },
-      { name: 'CBS De Regenboog', address: 'Reijerweg 60, 2983 AT Ridderkerk', lat: 51.885218, lon: 4.6051965 },
-      { name: 'CBS De Vrijenburg', address: 'Vrijenburglaan 61, 2994 CD Barendrecht', lat: 51.8589301, lon: 4.5062779 },
-      { name: 'CBS De Wingerd', address: 'Da Costalaan 3, 2985 BC Ridderkerk', lat: 51.8627854, lon: 4.6042018 },
-      { name: 'CBS Groen van Prinsterer (Stellingmolen)', address: 'Stellingmolen 10, 2992 DN Barendrecht', lat: 51.85, lon: 4.5295 },
-       { name: 'CBS Groen van Prinsterer (Hof van Maxima)', address: 'Hedwigepolder 2, 2992 TS Barendrecht', lat: 51.845301, lon: 4.5265 },
-      { name: 'CBS Het Kompas', address: 'Hoefslag 20, 2992 VH Barendrecht', lat: 51.8569395, lon: 4.5293586 },
-      { name: 'CBS Smitshoek (Riederhof)', address: 'Riederhof 37, 2993 XJ Barendrecht', lat: 51.85424313964844, lon: 4.491832669830322 },
-      { name: 'CBS Smitshoek (Brandsma-akker)', address: 'Brandsma-akker 3, 2994 AA Barendrecht', lat: 51.857628411865234, lon: 4.493868350982666 },
-      { name: 'CBS Smitshoek (Kouwenhoven-akker)', address: 'Kouwenhoven-akker 14, 2994 AS Barendrecht', lat: 51.8597538, lon: 4.4940023 },
-      { name: 'PCPO Bestuursbureau', address: 'Achterom 70, 2991 CV Barendrecht', lat: 51.85496, lon: 4.5384424 }
+      { name: 'CBS De Ark', address: 'Klipper 108-109, 2991 KM Barendrecht', city: 'Barendrecht', lat: 51.85667, lon: 4.53472 },
+      { name: 'CBS De Bongerd', address: 'Patrijs 28-29, 2986 CA Ridderkerk', city: 'Ridderkerk', lat: 51.8646633, lon: 4.6135642 },
+      { name: 'CBS De Fontein', address: 'Scheldeplein 4, 2987 EL Ridderkerk', city: 'Ridderkerk', lat: 51.8912258, lon: 4.5790103 },
+      { name: 'CBS De Hoeksteen', address: 'Kruidentuin 6A, 2991 RK Barendrecht', city: 'Barendrecht', lat: 51.852674755859375, lon: 4.547271728515625 },
+      { name: 'CBS De Klimop', address: 'Meester Treubstraat 3, 2982 VN Ridderkerk', city: 'Ridderkerk', lat: 51.871284, lon: 4.5914643 },
+      { name: 'CBS De Regenboog', address: 'Reijerweg 60, 2983 AT Ridderkerk', city: 'Ridderkerk', lat: 51.885218, lon: 4.6051965 },
+      { name: 'CBS De Vrijenburg', address: 'Vrijenburglaan 61, 2994 CD Barendrecht', city: 'Barendrecht', lat: 51.8589301, lon: 4.5062779 },
+      { name: 'CBS De Wingerd', address: 'Da Costalaan 3, 2985 BC Ridderkerk', city: 'Ridderkerk', lat: 51.8627854, lon: 4.6042018 },
+      { name: 'CBS Groen van Prinsterer (Stellingmolen)', address: 'Stellingmolen 10, 2992 DN Barendrecht', city: 'Barendrecht', lat: 51.85, lon: 4.5295 },
+      { name: 'CBS Groen van Prinsterer (Hof van Maxima)', address: 'Hedwigepolder 2, 2992 TS Barendrecht', city: 'Barendrecht', lat: 51.845301, lon: 4.5265 },
+      { name: 'CBS Het Kompas', address: 'Hoefslag 20, 2992 VH Barendrecht', city: 'Barendrecht', lat: 51.8569395, lon: 4.5293586 },
+      { name: 'CBS Smitshoek (Riederhof)', address: 'Riederhof 37, 2993 XJ Barendrecht', city: 'Barendrecht', lat: 51.85424313964844, lon: 4.491832669830322 },
+      { name: 'CBS Smitshoek (Brandsma-akker)', address: 'Brandsma-akker 3, 2994 AA Barendrecht', city: 'Barendrecht', lat: 51.857628411865234, lon: 4.493868350982666 },
+      { name: 'CBS Smitshoek (Kouwenhoven-akker)', address: 'Kouwenhoven-akker 14, 2994 AS Barendrecht', city: 'Barendrecht', lat: 51.8597538, lon: 4.4940023 },
+      { name: 'PCPO Bestuursbureau', address: 'Achterom 70, 2991 CV Barendrecht', city: 'Barendrecht', lat: 51.85496, lon: 4.5384424 }
     ];
 
     const map = L.map('schoolMap').setView([51.8575, 4.55], 12);
     const addressInput = document.getElementById('addressInput');
     const searchButton = document.getElementById('searchButton');
+    const openTopFilterButton = document.getElementById('openTopFilterButton');
+    const topFilterPanel = document.getElementById('topFilterPanel');
+    const applyTopFilterButton = document.getElementById('applyTopFilterButton');
+    const cityBarendrechtCheck = document.getElementById('cityBarendrechtCheck');
+    const cityRidderkerkCheck = document.getElementById('cityRidderkerkCheck');
+    const countBarendrecht = document.getElementById('countBarendrecht');
+    const countRidderkerk = document.getElementById('countRidderkerk');
+    const mapShell = document.getElementById('mapShell');
+    const fullscreenMapButton = document.getElementById('fullscreenMapButton');
     const statusMessage = document.getElementById('statusMessage');
     const nearestSchools = document.getElementById('nearestSchools');
+    const schoolCardsGrid = document.getElementById('schoolCardsGrid');
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
@@ -188,6 +434,7 @@
     }).addTo(map);
 
     let userMarker = null;
+    let filteredSchools = [...schoolLocations];
     const schoolMarkersLayer = L.layerGroup().addTo(map);
 
     const redIcon = new L.Icon({
@@ -223,22 +470,33 @@
       return earthRadiusKm * c;
     }
 
+    function getSelectedCities() {
+      const selected = [];
+      if (cityBarendrechtCheck.checked) selected.push('Barendrecht');
+      if (cityRidderkerkCheck.checked) selected.push('Ridderkerk');
+      return selected;
+    }
+
+    function applyFiltersToData() {
+      const selectedCities = getSelectedCities();
+      filteredSchools = selectedCities.length
+        ? schoolLocations.filter((school) => selectedCities.includes(school.city))
+        : [];
+    }
+
     function renderSchoolMarkers() {
       const bounds = L.latLngBounds();
       schoolMarkersLayer.clearLayers();
 
-      schoolLocations.forEach((school) => {
+      filteredSchools.forEach((school) => {
         const marker = L.marker([school.lat, school.lon], { icon: blueIcon }).addTo(schoolMarkersLayer);
-
         marker.bindTooltip(`<strong>${school.name}</strong><br>${school.address}`, {
           direction: 'top',
           sticky: true,
           opacity: 0.95
         });
-
         marker.on('mouseover', () => marker.openTooltip());
         marker.on('mouseout', () => marker.closeTooltip());
-
         bounds.extend([school.lat, school.lon]);
       });
 
@@ -250,7 +508,7 @@
     function renderNearestSchools(userLat, userLon) {
       nearestSchools.innerHTML = '';
 
-      const sortedSchools = schoolLocations
+      const sortedSchools = filteredSchools
         .map((school) => ({
           ...school,
           distance: haversineDistanceKm(userLat, userLon, school.lat, school.lon)
@@ -264,13 +522,75 @@
       });
     }
 
+    function getSchoolLogoByIndex(index) {
+      if (index === 8) return 'images/logo10.webp';
+      if (index === 12 || index === 13) return 'images/logo12.webp';
+      if (index === 14) return 'images/logo.png';
+      return `images/logo${(index % 12) + 1}.webp`;
+    }
+
+    function renderSchoolCards() {
+      schoolCardsGrid.innerHTML = '';
+
+      filteredSchools.forEach((school, index) => {
+        const card = document.createElement('article');
+        card.className = 'school-card';
+        card.innerHTML = `
+          <div class="school-card__logo">
+            <img src="${getSchoolLogoByIndex(index)}" alt="Logo van ${school.name}">
+          </div>
+          <div class="school-card__body">
+            <h3 class="school-card__name">${school.name}</h3>
+            <span class="school-card__city">${school.city}</span>
+            <p class="school-card__meta">📍 ${school.address}</p>
+            <p class="school-card__meta">✉️ Neem contact op met de school voor meer info.</p>
+            <div class="school-card__actions">
+              <a href="#" role="button">Meer info</a>
+              <a href="#" role="button">Website</a>
+            </div>
+          </div>
+        `;
+        schoolCardsGrid.appendChild(card);
+      });
+    }
+
+    function updateCityCounts() {
+      countBarendrecht.textContent = schoolLocations.filter((school) => school.city === 'Barendrecht').length;
+      countRidderkerk.textContent = schoolLocations.filter((school) => school.city === 'Ridderkerk').length;
+    }
+
+    function applyAllFilters() {
+      applyFiltersToData();
+      renderSchoolMarkers();
+      renderSchoolCards();
+
+      if (userMarker) {
+        const userCoords = userMarker.getLatLng();
+        renderNearestSchools(userCoords.lat, userCoords.lng);
+      } else {
+        nearestSchools.innerHTML = '';
+      }
+
+      if (!filteredSchools.length) {
+        setStatus('Geen scholen gevonden voor deze filter.');
+      } else {
+        setStatus('Filter actief. Beweeg met de muis over een marker om naam en adres te zien.');
+      }
+    }
+
+    function toggleMapFullscreen() {
+      mapShell.classList.toggle('is-fullscreen');
+      const isFullscreen = mapShell.classList.contains('is-fullscreen');
+      fullscreenMapButton.textContent = isFullscreen ? 'Verkleinen' : 'Schermvullend';
+      document.body.style.overflow = isFullscreen ? 'hidden' : '';
+      setTimeout(() => map.invalidateSize(), 160);
+    }
+
     async function fetchJson(endpoint) {
       const response = await fetch(endpoint);
-
       if (!response.ok) {
         throw new Error('Adres opzoeken mislukt');
       }
-
       return response.json();
     }
 
@@ -293,10 +613,7 @@
       const photonEndpoint = `https://photon.komoot.io/api/?limit=1&lang=nl&q=${query}`;
       const photonData = await fetchJson(photonEndpoint);
       const firstFeature = photonData.features?.[0];
-
-      if (!firstFeature) {
-        return null;
-      }
+      if (!firstFeature) return null;
 
       return {
         lat: Number(firstFeature.geometry.coordinates[1]),
@@ -344,6 +661,15 @@
     }
 
     searchButton.addEventListener('click', handleSearch);
+    applyTopFilterButton.addEventListener('click', () => {
+      applyAllFilters();
+      topFilterPanel.classList.remove('open');
+    });
+
+    openTopFilterButton.addEventListener('click', () => {
+      topFilterPanel.classList.toggle('open');
+    });
+
     addressInput.addEventListener('keydown', (event) => {
       if (event.key === 'Enter') {
         event.preventDefault();
@@ -351,13 +677,23 @@
       }
     });
 
-    renderSchoolMarkers();
-    setStatus('Beweeg met de muis over een marker om naam en adres te zien.');
+    fullscreenMapButton.addEventListener('click', toggleMapFullscreen);
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && mapShell.classList.contains('is-fullscreen')) {
+        toggleMapFullscreen();
+      }
+      if (event.key === 'Escape' && topFilterPanel.classList.contains('open')) {
+        topFilterPanel.classList.remove('open');
+      }
+    });
+
+    updateCityCounts();
+    applyAllFilters();
   </script>
-  <!-- Arrow button -->
+
   <button id="menuToggle">➤</button>
 
-  <!-- Side menu -->
   <nav id="sideMenu">
     <a href="pagina1.html">Schoolinformatie</a>
     <a href="pagina2.html">Welke school past bij jouw kind?</a>
@@ -365,7 +701,6 @@
     <a href="pagina4.html">Contact</a>
     <a href="index.html" style="padding: 40px; display:block;"> home </a>
   </nav>
-   <script src="app.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
-
