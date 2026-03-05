@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Onze scholen</title>
+    <link rel="stylesheet" href="style.css">
   <link
     rel="stylesheet"
     href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -158,21 +159,21 @@
 
   <script>
     const schoolLocations = [
-     { name: 'CBS De Ark', address: 'Klipper 108-109, 2991 KM Barendrecht', fallbackLat: 51.85761, fallbackLon: 4.55236 },
-      { name: 'CBS De Bongerd', address: 'Patrijs 28-29, 2986 CA Ridderkerk', fallbackLat: 51.86676, fallbackLon: 4.61229 },
-      { name: 'CBS De Fontein', address: 'Scheldeplein 4, 2987 EL Ridderkerk', fallbackLat: 51.86239, fallbackLon: 4.62911 },
-      { name: 'CBS De Hoeksteen', address: 'Kruidentuin 6A, 2991 RK Barendrecht', fallbackLat: 51.85357, fallbackLon: 4.54827 },
-      { name: 'CBS De Klimop', address: 'Meester Treubstraat 3, 2982 VN Ridderkerk', fallbackLat: 51.88005, fallbackLon: 4.59136 },
-      { name: 'CBS De Regenboog', address: 'Reijerweg 60, 2983 AT Ridderkerk', fallbackLat: 51.88771, fallbackLon: 4.60384 },
-      { name: 'CBS De Vrijenburg', address: 'Vrijenburglaan 61, 2994 CD Barendrecht', fallbackLat: 51.85077, fallbackLon: 4.53266 },
-      { name: 'CBS De Wingerd', address: 'Da Costalaan 3, 2985 BC Ridderkerk', fallbackLat: 51.86522, fallbackLon: 4.58659 },
-      { name: 'CBS Groen van Prinsterer (Stellingmolen)', address: 'Stellingmolen 10, 2992 DN Barendrecht', fallbackLat: 51.85462, fallbackLon: 4.52245 },
-      { name: 'CBS Groen van Prinsterer (Hof van Maxima)', address: 'Hedwigepolder 2, 2992 TS Barendrecht', fallbackLat: 51.85145, fallbackLon: 4.52309 },
-      { name: 'CBS Het Kompas', address: 'Hoefslag 20, 2992 VH Barendrecht', fallbackLat: 51.85721, fallbackLon: 4.51674 },
-      { name: 'CBS Smitshoek (Riederhof)', address: 'Riederhof 37, 2993 XJ Barendrecht', fallbackLat: 51.83625, fallbackLon: 4.55314 },
-      { name: 'CBS Smitshoek (Brandsma-akker)', address: 'Brandsma-akker 3, 2994 AA Barendrecht', fallbackLat: 51.84456, fallbackLon: 4.54091 },
-      { name: 'CBS Smitshoek (Kouwenhoven-akker)', address: 'Kouwenhoven-akker 14, 2994 AS Barendrecht', fallbackLat: 51.84516, fallbackLon: 4.54438 },
-      { name: 'PCPO Bestuursbureau', address: 'Achterom 70, 2991 CV Barendrecht', fallbackLat: 51.85799, fallbackLon: 4.54553 }
+      { name: 'CBS De Ark', address: 'Klipper 108-109, 2991 KM Barendrecht', lat: 51.85667, lon: 4.53472 },
+      { name: 'CBS De Bongerd', address: 'Patrijs 28-29, 2986 CA Ridderkerk', lat: 51.8646633, lon: 4.6135642 },
+      { name: 'CBS De Fontein', address: 'Scheldeplein 4, 2987 EL Ridderkerk', lat: 51.8912258, lon: 4.5790103 },
+      { name: 'CBS De Hoeksteen', address: 'Kruidentuin 6A, 2991 RK Barendrecht', lat: 51.852674755859375, lon: 4.547271728515625 },
+      { name: 'CBS De Klimop', address: 'Meester Treubstraat 3, 2982 VN Ridderkerk', lat: 51.871284, lon: 4.5914643 },
+      { name: 'CBS De Regenboog', address: 'Reijerweg 60, 2983 AT Ridderkerk', lat: 51.885218, lon: 4.6051965 },
+      { name: 'CBS De Vrijenburg', address: 'Vrijenburglaan 61, 2994 CD Barendrecht', lat: 51.8589301, lon: 4.5062779 },
+      { name: 'CBS De Wingerd', address: 'Da Costalaan 3, 2985 BC Ridderkerk', lat: 51.8627854, lon: 4.6042018 },
+      { name: 'CBS Groen van Prinsterer (Stellingmolen)', address: 'Stellingmolen 10, 2992 DN Barendrecht', lat: 51.85, lon: 4.5295 },
+       { name: 'CBS Groen van Prinsterer (Hof van Maxima)', address: 'Hedwigepolder 2, 2992 TS Barendrecht', lat: 51.845301, lon: 4.5265 },
+      { name: 'CBS Het Kompas', address: 'Hoefslag 20, 2992 VH Barendrecht', lat: 51.8569395, lon: 4.5293586 },
+      { name: 'CBS Smitshoek (Riederhof)', address: 'Riederhof 37, 2993 XJ Barendrecht', lat: 51.85424313964844, lon: 4.491832669830322 },
+      { name: 'CBS Smitshoek (Brandsma-akker)', address: 'Brandsma-akker 3, 2994 AA Barendrecht', lat: 51.857628411865234, lon: 4.493868350982666 },
+      { name: 'CBS Smitshoek (Kouwenhoven-akker)', address: 'Kouwenhoven-akker 14, 2994 AS Barendrecht', lat: 51.8597538, lon: 4.4940023 },
+      { name: 'PCPO Bestuursbureau', address: 'Achterom 70, 2991 CV Barendrecht', lat: 51.85496, lon: 4.5384424 }
     ];
 
     const map = L.map('schoolMap').setView([51.8575, 4.55], 12);
@@ -198,6 +199,15 @@
       shadowSize: [41, 41]
     });
 
+    const blueIcon = new L.Icon({
+      iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png',
+      shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+      shadowSize: [41, 41]
+    });
+
     function setStatus(message) {
       statusMessage.textContent = message;
     }
@@ -213,58 +223,12 @@
       return earthRadiusKm * c;
     }
 
-    async function geocodeSchool(address) {
-      const query = encodeURIComponent(`${address}, Nederland`);
-      const endpoint = `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${query}`;
-
-      const response = await fetch(endpoint, {
-        headers: {
-          'Accept-Language': 'nl'
-        }
-      });
-
-      if (!response.ok) {
-        throw new Error(`Schooladres opzoeken mislukt: ${address}`);
-      }
-
-      const data = await response.json();
-      if (!data.length) {
-        return null;
-      }
-
-      return {
-        lat: Number(data[0].lat),
-        lon: Number(data[0].lon)
-      };
-    }
-
-    async function geocodeSchoolLocations() {
-      const resolvedLocations = [];
-
-      for (const school of schoolLocations) {
-        try {
-          const geocoded = await geocodeSchool(school.address);
-          if (geocoded) {
-            resolvedLocations.push({ ...school, ...geocoded });
-          } else {
-            resolvedLocations.push({ ...school, lat: school.fallbackLat, lon: school.fallbackLon });
-          }
-        } catch (error) {
-          console.warn(error);
-          resolvedLocations.push({ ...school, lat: school.fallbackLat, lon: school.fallbackLon });
-        }
-
-        await new Promise((resolve) => setTimeout(resolve, 1100));
-      }
-
-      return resolvedLocations;
-    }
-
-    function renderSchoolMarkers(locations) {
+    function renderSchoolMarkers() {
       const bounds = L.latLngBounds();
+      schoolMarkersLayer.clearLayers();
 
-     locations.forEach((school) => {
-        const marker = L.marker([school.lat, school.lon]).addTo(schoolMarkersLayer);
+      schoolLocations.forEach((school) => {
+        const marker = L.marker([school.lat, school.lon], { icon: blueIcon }).addTo(schoolMarkersLayer);
 
         marker.bindTooltip(`<strong>${school.name}</strong><br>${school.address}`, {
           direction: 'top',
@@ -283,10 +247,10 @@
       }
     }
 
-    function renderNearestSchools(userLat, userLon, locations) {
+    function renderNearestSchools(userLat, userLon) {
       nearestSchools.innerHTML = '';
 
-      const sortedSchools = locations
+      const sortedSchools = schoolLocations
         .map((school) => ({
           ...school,
           distance: haversineDistanceKm(userLat, userLon, school.lat, school.lon)
@@ -300,32 +264,47 @@
       });
     }
 
-    async function geocodeAddress(address) {
-      const query = encodeURIComponent(`${address}, Nederland`);
-      const endpoint = `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${query}`;
-
-      const response = await fetch(endpoint, {
-        headers: {
-          'Accept-Language': 'nl'
-        }
-      });
+    async function fetchJson(endpoint) {
+      const response = await fetch(endpoint);
 
       if (!response.ok) {
         throw new Error('Adres opzoeken mislukt');
       }
 
-      const data = await response.json();
-      if (!data.length) {
+      return response.json();
+    }
+
+    async function geocodeAddress(address) {
+      const query = encodeURIComponent(`${address}, Nederland`);
+      const nominatimEndpoint = `https://nominatim.openstreetmap.org/search?format=json&limit=1&accept-language=nl&q=${query}`;
+
+      try {
+        const nominatimData = await fetchJson(nominatimEndpoint);
+        if (nominatimData.length) {
+          return {
+            lat: Number(nominatimData[0].lat),
+            lon: Number(nominatimData[0].lon)
+          };
+        }
+      } catch (error) {
+        console.warn('Nominatim lookup failed, trying Photon fallback.', error);
+      }
+
+      const photonEndpoint = `https://photon.komoot.io/api/?limit=1&lang=nl&q=${query}`;
+      const photonData = await fetchJson(photonEndpoint);
+      const firstFeature = photonData.features?.[0];
+
+      if (!firstFeature) {
         return null;
       }
 
       return {
-        lat: Number(data[0].lat),
-        lon: Number(data[0].lon)
+        lat: Number(firstFeature.geometry.coordinates[1]),
+        lon: Number(firstFeature.geometry.coordinates[0])
       };
     }
 
-   async function handleSearch(locations) {
+    async function handleSearch() {
       const inputValue = addressInput.value.trim();
       if (!inputValue) {
         setStatus('Vul eerst een adres in.');
@@ -333,6 +312,7 @@
       }
 
       setStatus('Adres zoeken...');
+      searchButton.disabled = true;
 
       try {
         const location = await geocodeAddress(inputValue);
@@ -358,26 +338,34 @@
       } catch (error) {
         console.error(error);
         setStatus('Zoeken mislukt. Controleer het adres en probeer opnieuw.');
+      } finally {
+        searchButton.disabled = false;
       }
     }
 
-    async function initializeMap() {
-      setStatus('Schoollocaties laden...');
-      const resolvedLocations = await geocodeSchoolLocations();
+    searchButton.addEventListener('click', handleSearch);
+    addressInput.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        handleSearch();
+      }
+    });
 
-      renderSchoolMarkers(resolvedLocations);
-      setStatus('Beweeg met de muis over een marker om naam en adres te zien.');
-
-      searchButton.addEventListener('click', () => handleSearch(resolvedLocations));
-      addressInput.addEventListener('keydown', (event) => {
-        if (event.key === 'Enter') {
-          event.preventDefault();
-          handleSearch(resolvedLocations);
-        }
-      });
-    }
     renderSchoolMarkers();
     setStatus('Beweeg met de muis over een marker om naam en adres te zien.');
   </script>
+  <!-- Arrow button -->
+  <button id="menuToggle">➤</button>
+
+  <!-- Side menu -->
+  <nav id="sideMenu">
+    <a href="pagina1.html">Schoolinformatie</a>
+    <a href="pagina2.html">Welke school past bij jouw kind?</a>
+    <a href="pagina3.html">Onze scholen</a>
+    <a href="pagina4.html">Contact</a>
+    <a href="index.html" style="padding: 40px; display:block;"> home </a>
+  </nav>
+   <script src="app.js"></script>
 </body>
 </html>
+
