@@ -2,28 +2,127 @@
 <html lang="nl">
 <head>
   <meta charset="UTF-8">
-  <title>Contact</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact</title>
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="contact-page">
+  <button id="menuToggle" aria-label="Open menu">➤</button>
 
-  <h1 style="text-align: center; color: #38B6FF;; margin-top: 50px;">Contact</h1>
-
-</body>
-</html>
-
-<!-- Arrow button -->
-  <button id="menuToggle">➤</button>
-
-  <!-- Side menu -->
   <nav id="sideMenu">
-    <a href="pagina1.html">Schoolinformatie</a>
-    <a href="pagina2.html">Welke school past bij jouw kind?</a>
-    <a href="pagina3.html">Onze scholen</a>
-    <a href="pagina4.html">Contact</a>
-    <a href="index.html" style="padding: 40px; display:block;"> home </a>
+    <a href="pagina1.html" data-i18n="navSchoolInfo">Schoolinformatie</a>
+    <a href="pagina2.html" data-i18n="navSchoolFit">Welke school past bij jouw kind?</a>
+    <a href="pagina3.html" data-i18n="navSchools">Onze scholen</a>
+    <a href="pagina4.html" data-i18n="navContact">Contact</a>
+    <a href="index.html" style="padding: 40px; display:block;" data-i18n="navHome">Home</a>
   </nav>
-   <script src="app.js"></script>
+
+  <main class="contact-wrapper">
+    <header class="contact-header">
+      <h1 data-i18n="pageTitle">Contact</h1>
+      <div class="translate-controls" id="translateControls">
+        <button id="languageToggle" class="language-toggle" type="button" aria-expanded="false" aria-controls="languageMenu" aria-label="Kies een taal">
+          <span id="languageToggleFlag">
+          <img src="flags/nl.png" width="22">
+        </span>
+        </button>
+        <div id="languageMenu" class="language-menu" hidden>
+          <button type="button" data-language-option="nl">🇳🇱 NL</button>
+          <button type="button" data-language-option="en">🇬🇧 EN</button>
+          <button type="button" data-language-option="de">🇩🇪 DE</button>
+          <button type="button" data-language-option="fr">🇫🇷 FR</button>
+          <button type="button" data-language-option="es">🇪🇸 ES</button>
+        </div>
+        <label for="languageSelect" class="sr-only" data-i18n="translateLabel">Vertaal de hele pagina:</label>
+        <select id="languageSelect" aria-label="Kies een taal" class="sr-only">
+          <option value="nl">Nederlands</option>
+          <option value="en">English</option>
+          <option value="de">Deutsch</option>
+          <option value="fr">Français</option>
+          <option value="es">Español</option>
+        </select>
+      </div>
+    </header>
+
+    <section class="contact-cards" aria-label="Contactinformatie">
+      <article class="contact-card">
+        <h2 data-i18n="emailTitle">E-mail</h2>
+        <p><a href="mailto:pcpocontact@gmail.com">pcpocontact@gmail.com</a></p>
+        <span data-i18n="emailText">Mail ons je vragen</span>
+      </article>
+
+      <article class="contact-card">
+        <h2 data-i18n="phoneTitle">Telefoon</h2>
+        <p><a href="tel:0180620533">0180620533</a></p>
+        <span data-i18n="phoneText">Bel ons</span>
+      </article>
+
+      <article class="contact-card">
+        <h2 data-i18n="addressTitle">Adres</h2>
+        <p>Achterom 70</p>
+        <span>2991 CV Barendrecht</span>
+      </article>
+    </section>
+
+    <section class="contact-grid">
+      <div class="contact-form-box">
+        <h2 data-i18n="formTitle">Contactformulier</h2>
+        <form id="contactForm">
+          <label for="name" data-i18n="labelName">Naam</label>
+          <input id="name" name="name" required>
+
+          <label for="email" data-i18n="labelEmail">E-mail</label>
+          <input id="email" name="email" type="email" required>
+
+          <label for="subject" data-i18n="labelSubject">Onderwerp</label>
+          <input id="subject" name="subject" required>
+
+          <label for="message" data-i18n="labelMessage">Bericht</label>
+          <textarea id="message" name="message" rows="5" required></textarea>
+
+          <button id="contactSubmit" type="submit" data-i18n="submit">Verzenden</button>
+          <p id="formFeedback" class="form-feedback" aria-live="polite"></p>
+        </form>
+      </div>
+
+      <aside class="contact-side">
+        <iframe
+          title="Kaart van PCPO"
+          src="https://www.google.com/maps?q=Achterom+70+Barendrecht&output=embed"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+      </aside>
+    </section>
+  </main>
+
+  <button id="chatToggle" class="chat-toggle" aria-expanded="false" aria-controls="chatbotPanel">Chat</button>
+
+  <section id="chatbotPanel" class="chatbot" aria-live="polite" hidden>
+    <div class="chat-header">
+      <h3 data-i18n="chatTitle">PCPO Chatbot</h3>
+      <button id="chatClose" type="button" aria-label="Chat sluiten">✕</button>
+    </div>
+
+    <p class="chat-status" id="chatStatus" data-i18n="chatStatus">Online • We reageren direct</p>
+
+    <div id="chatMessages" class="chat-messages"></div>
+
+    <div class="chat-quick-actions" id="chatQuickActions">
+      <button type="button" data-question-key="qaEmail" data-i18n="qaEmail">E-mailadres</button>
+      <button type="button" data-question-key="qaPhone" data-i18n="qaPhone">Telefoon</button>
+      <button type="button" data-question-key="qaAddress" data-i18n="qaAddress">Adres</button>
+      <button type="button" data-question-key="qaContact" data-i18n="qaContact">Contact opnemen</button>
+    </div>
+
+    <form id="chatForm" class="chat-form">
+      <input id="chatInput" autocomplete="off" required>
+      <button id="chatSend" type="submit" data-i18n="chatSend">Verstuur</button>
+    </form>
+
+    <button id="chatReset" class="chat-reset" type="button" data-i18n="chatReset">Chat legen</button>
+  </section>
+
+  <script src="app.js"></script>
+  <script src="chat.js"></script>
 </body>
-</html>
