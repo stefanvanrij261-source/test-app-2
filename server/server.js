@@ -293,6 +293,17 @@ function parseAllowedChatSites() {
     .filter(Boolean);
 }
 
+const CHAT_FETCH_CACHE = new Map();
+const CHAT_CACHE_TTL_MS = 5 * 60 * 1000;
+
+const INTENT_TERMS = {
+  openingstijden: ["opening", "openingstijd", "uren", "wanneer open", "wanneer dicht"],
+  parkeren: ["parkeren", "parkeer", "parkeerplaats", "auto", "bereikbaarheid"],
+  contact: ["contact", "mail", "email", "telefoon", "bellen"],
+  adres: ["adres", "waar", "locatie", "route", "vestiging"],
+  inschrijven: ["inschrijven", "inschrijving", "aanmelden", "toelating"]
+};
+
 function normalizeAndValidateHttpUrl(value) {
   try {
     const url = new URL(String(value || "").trim());
@@ -303,18 +314,89 @@ function normalizeAndValidateHttpUrl(value) {
   }
 }
 
+function normalizeText(value) {
+  return String(value || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "");
+}
+
+function tokenize(value) {
+  return normalizeText(value)
+    .split(/[^a-z0-9]+/)
+    .filter((token) => token.length >= 3);
+}
+
 function stripHtmlToText(html) {
   return String(html || "")
     .replace(/<script[\s\S]*?<\/script>/gi, " ")
     .replace(/<style[\s\S]*?<\/style>/gi, " ")
+    .replace(/<noscript[\s\S]*?<\/noscript>/gi, " ")
     .replace(/<[^>]+>/g, " ")
     .replace(/&nbsp;/gi, " ")
     .replace(/&amp;/gi, "&")
+    .replace(/&quot;/gi, '"')
+    .replace(/&#39;/gi, "'")
     .replace(/\s+/g, " ")
     .trim();
 }
 
+function splitIntoSentences(text) {
+  return String(text || "")
+    .split(/(?<=[.!?])\s+/)
+    .map((line) => line.trim())
+    .filter((line) => line.length >= 40)
+    .slice(0, 400);
+}
+
+function buildSchoolFacts(school) {
+  return [
+    `${school.name} zit op ${school.address} in ${school.city}.`,
+    `Website van ${school.name}: ${school.website}.`
+  ];
+}
+
+function detectQuestionIntent(question) {
+  const q = normalizeText(question);
+  const intents = [];
+  Object.entries(INTENT_TERMS).forEach(([intent, terms]) => {
+    if (terms.some((term) => q.includes(term))) intents.push(intent);
+  });
+  return intents;
+}
+
+function pickRelevantSchools(question, sourcesToUse) {
+  const q = normalizeText(question);
+  const tokens = tokenize(question);
+
+  const fromSource = SCHOOL_DIRECTORY.filter((school) => {
+    const website = normalizeAndValidateHttpUrl(school.website);
+    return website && sourcesToUse.some((src) => website.startsWith(src) || src.startsWith(website));
+  });
+
+  const scored = fromSource.map((school) => {
+    const haystack = normalizeText(`${school.name} ${school.address} ${school.city} ${school.website}`);
+    let score = 0;
+
+    if (q && haystack.includes(q)) score += 5;
+    tokens.forEach((token) => {
+      if (haystack.includes(token)) score += 1;
+    });
+
+    return { school, score };
+  });
+
+  const ranked = scored.filter((entry) => entry.score > 0).sort((a, b) => b.score - a.score);
+  if (ranked.length > 0) return ranked.map((entry) => entry.school).slice(0, 3);
+
+  return fromSource.slice(0, 3);
+}
+
 async function fetchWebsiteSnippet(url) {
+  const now = Date.now();
+  const cached = CHAT_FETCH_CACHE.get(url);
+  if (cached && now - cached.at < CHAT_CACHE_TTL_MS) return cached.value;
+
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 10000);
 
@@ -326,115 +408,83 @@ async function fetchWebsiteSnippet(url) {
     });
 
     if (!response.ok) {
-      return { url, text: "", error: `HTTP ${response.status}` };
+      const value = { url, text: "", sentences: [], error: `HTTP ${response.status}` };
+      CHAT_FETCH_CACHE.set(url, { at: now, value });
+      return value;
     }
 
     const html = await response.text();
-    const text = stripHtmlToText(html).slice(0, 4000);
-    return { url, text, error: "" };
+    const text = stripHtmlToText(html).slice(0, 12000);
+    const value = { url, text, sentences: splitIntoSentences(text), error: "" };
+    CHAT_FETCH_CACHE.set(url, { at: now, value });
+    return value;
   } catch (error) {
-    return { url, text: "", error: error.message || "onbekende fout" };
+    const value = { url, text: "", sentences: [], error: error.message || "onbekende fout" };
+    CHAT_FETCH_CACHE.set(url, { at: now, value });
+    return value;
   } finally {
     clearTimeout(timeout);
   }
 }
 
-function generateLocalAnswer(question, contextBlocks) {
-  const q = String(question || "").toLowerCase().trim();
-  const tokens = q
-    .split(/\s+/)
-    .map((token) => token.replace(/[^a-z0-9à-ÿ-]/gi, ""))
-    .filter((token) => token.length >= 3);
+function scoreSentence(sentence, questionTokens, intentTerms) {
+  const normalizedSentence = normalizeText(sentence);
+  let score = 0;
 
-  const schools = SCHOOL_DIRECTORY.map((school) => {
-    const haystack = `${school.name} ${school.address} ${school.city} ${school.website}`.toLowerCase();
-    let score = 0;
-
-    if (q && haystack.includes(q)) score += 6;
-    tokens.forEach((token) => {
-      if (haystack.includes(token)) score += 1;
-    });
-
-    return { school, score };
+  questionTokens.forEach((token) => {
+    if (normalizedSentence.includes(token)) score += 2;
   });
 
-  const rankedSchools = schools
-    .filter((entry) => entry.score > 0)
-    .sort((a, b) => b.score - a.score)
-    .map((entry) => entry.school);
+  intentTerms.forEach((term) => {
+    if (normalizedSentence.includes(term)) score += 3;
+  });
 
-  const topSchools = (rankedSchools.length > 0 ? rankedSchools : SCHOOL_DIRECTORY).slice(0, 3);
+  if (normalizedSentence.includes("contact") || normalizedSentence.includes("aanmelden")) score += 0.5;
 
-  const wantsAddress = ["waar", "adres", "locatie", "vestiging"].some((term) => q.includes(term));
-  const wantsWebsite = ["site", "website", "web", "link"].some((term) => q.includes(term));
-
-  if (topSchools.length === 0) {
-    return "Ik kon op basis van de beschikbare schoolinformatie geen concreet antwoord vinden.";
-  }
-
-  if (topSchools.length === 1 && (wantsAddress || wantsWebsite)) {
-    const school = topSchools[0];
-    if (wantsAddress && wantsWebsite) {
-      return `${school.name} zit op ${school.address} (${school.city}) en de website is ${school.website}.`;
-    }
-    if (wantsAddress) {
-      return `${school.name} zit op ${school.address} (${school.city}).`;
-    }
-    return `De website van ${school.name} is ${school.website}.`;
-  }
-
-  return [
-    "Ik kan nu geen live AI-antwoord genereren, maar dit is de best passende schoolinformatie:",
-    ...topSchools.map((school) => `${school.name} | ${school.address} (${school.city}) | ${school.website}`)
-  ].join("\n- ");
+  return score;
 }
 
-async function generateAiAnswer({ question, contextBlocks }) {
-  const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey) {
-    return generateLocalAnswer(question, contextBlocks);
-  }
+function buildRealtimeAnswer(question, snippets, schools) {
+  const questionTokens = tokenize(question);
+  const intents = detectQuestionIntent(question);
+  const intentTerms = intents.flatMap((intent) => INTENT_TERMS[intent] || []).map(normalizeText);
 
-  const model = process.env.OPENAI_MODEL || "gpt-4o-mini";
-  const contextText = contextBlocks
-    .map((block, index) => `Bron ${index + 1}: ${block.url}\n${block.text}`)
-    .join("\n\n");
+  const candidates = [];
 
-  const response = await fetch("https://api.openai.com/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${apiKey}`
-    },
-    body: JSON.stringify({
-      model,
-      temperature: 0.2,
-      messages: [
-        {
-          role: "system",
-          content:
-            "Je bent een behulpzame school-assistent. Antwoord alleen met informatie uit de meegegeven bronnen. Als iets niet in de bronnen staat, zeg dat duidelijk."
-        },
-        {
-          role: "user",
-          content: `Vraag: ${question}\n\nBronnen:\n${contextText}`
-        }
-      ]
-    })
+  snippets.forEach((snippet) => {
+    snippet.sentences.forEach((sentence) => {
+      const score = scoreSentence(sentence, questionTokens, intentTerms);
+      if (score > 0) {
+        candidates.push({ sentence, score, source: snippet.url });
+      }
+    });
   });
 
-  if (!response.ok) {
-    const errorBody = await response.text();
+  schools.forEach((school) => {
+    buildSchoolFacts(school).forEach((fact) => {
+      const score = scoreSentence(fact, questionTokens, intentTerms) + 2;
+      candidates.push({ sentence: fact, score, source: school.website });
+    });
+  });
 
-    if (response.status === 429) {
-      return generateLocalAnswer(question, contextBlocks);
+  if (candidates.length === 0) {
+    if (schools.length > 0) {
+      const school = schools[0];
+      return `Ik heb nog geen direct antwoord gevonden op je vraag. Wel weet ik dat ${school.name} zit op ${school.address} (${school.city}). Website: ${school.website}.`;
     }
 
-    throw new Error(`AI request mislukt (${response.status}): ${errorBody}`);
+    return "Ik kon geen passend antwoord vinden in de geselecteerde websites. Stel je vraag specifieker met een schoolnaam of onderwerp zoals openingstijden, parkeren of contact.";
   }
 
-  const data = await response.json();
-  return String(data?.choices?.[0]?.message?.content || "").trim();
+  const best = candidates
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 4)
+    .filter((entry, index, arr) => arr.findIndex((x) => x.sentence === entry.sentence) === index);
+
+  const lines = best.map((entry) => `- ${entry.sentence}`);
+  const usedSources = [...new Set(best.map((entry) => entry.source))].slice(0, 3);
+
+  return `${lines.join("\n")}\n\nBronnen: ${usedSources.join(", ")}`;
 }
 
 async function handleChatRequest(req, res) {
@@ -450,7 +500,7 @@ async function handleChatRequest(req, res) {
   const normalizedSources = requestedSources
     .map(normalizeAndValidateHttpUrl)
     .filter(Boolean)
-    .slice(0, 8);
+    .slice(0, 12);
 
   const sourcesToUse =
     allowedSites.length > 0
@@ -464,36 +514,24 @@ async function handleChatRequest(req, res) {
     });
   }
 
-  const fetched = await Promise.all(sourcesToUse.map((url) => fetchWebsiteSnippet(url)));
-  const usableContext = fetched.filter((entry) => entry.text);
+  const relevantSchools = pickRelevantSchools(question, sourcesToUse);
+  const prioritizedSources = [
+    ...relevantSchools.map((school) => normalizeAndValidateHttpUrl(school.website)).filter(Boolean),
+    ...sourcesToUse
+  ];
 
-  const staticContext = SCHOOL_DIRECTORY
-    .filter((school) => sourcesToUse.some((source) => school.website.startsWith(source) || source.startsWith(school.website)))
-    .map((school) => ({
-      url: school.website,
-      text: `${school.name} | ${school.address} | ${school.city} | Website: ${school.website}`
-    }));
+  const uniqueSources = [...new Set(prioritizedSources)].slice(0, 6);
+  const fetched = await Promise.all(uniqueSources.map((url) => fetchWebsiteSnippet(url)));
+  const usableSnippets = fetched.filter((entry) => entry.text);
 
-  const combinedContext = [...usableContext, ...staticContext];
+  const answer = buildRealtimeAnswer(question, usableSnippets, relevantSchools);
 
-  if (combinedContext.length === 0) {
-    return res.status(502).json({
-      error: "Kon geen bruikbare website- of schoolinformatie ophalen.",
-      fetchErrors: fetched.filter((entry) => entry.error)
-    });
-  }
-
-  try {
-    const answer = await generateAiAnswer({ question, contextBlocks: combinedContext });
-    return res.status(200).json({
-      ok: true,
-      answer: answer || "Ik kon geen duidelijk antwoord vormen uit de beschikbare bronnen.",
-      usedSources: combinedContext.map((entry) => entry.url),
-      fetchErrors: fetched.filter((entry) => entry.error)
-    });
-  } catch (error) {
-    return res.status(500).json({ error: `AI-chat mislukt: ${error.message}` });
-  }
+  return res.status(200).json({
+    ok: true,
+    answer,
+    usedSources: uniqueSources,
+    fetchErrors: fetched.filter((entry) => entry.error)
+  });
 }
 
 app.post("/api/chat", handleChatRequest);
