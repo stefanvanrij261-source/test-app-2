@@ -7,6 +7,33 @@ const path = require("path");
 const app = express();
 const PORT = 3000;
 
+process.env.SMTP_HOST = "smtp.gmail.com";
+process.env.SMTP_PORT = "587";
+process.env.SMTP_SECURE = "false";
+process.env.SMTP_USER = "pcpocontact@gmail.com";
+process.env.SMTP_PASS = "ktfv hhyp qosj ijil";
+process.env.MAIL_FROM = "pcpocontact@gmail.com";
+process.env.MAIL_TO = "pcpocontact@gmail.com";
+
+function resolveClientDir() {
+  const candidates = [
+    path.resolve(__dirname, "../client"),
+    path.resolve(process.cwd(), "client"),
+    path.resolve(process.cwd(), "../client"),
+    __dirname
+  ];
+
+  for (const dir of candidates) {
+    const indexFile = path.join(dir, "index.html");
+    if (fs.existsSync(indexFile)) return dir;
+  }
+
+  return path.resolve(__dirname, "../client");
+}
+
+const CLIENT_DIR = resolveClientDir();
+const CLIENT_INDEX = path.join(CLIENT_DIR, "index.html");
+
 const SCHOOL_DIRECTORY = [
   { name: "CBS De Ark", address: "Klipper 108-109, 2991 KM Barendrecht", city: "Barendrecht", website: "http://www.cbsdearkbarendrecht.nl/" },
   { name: "CBS De Bongerd", address: "Patrijs 28-29, 2986 CA Ridderkerk", city: "Ridderkerk", website: "https://www.cbsdebongerd.nl/" },
@@ -28,12 +55,10 @@ const SCHOOL_DIRECTORY = [
 app.use(express.json());
 
 // client map serveren
-app.use(express.static(__dirname));
-
-
+app.use(express.static(CLIENT_DIR));
 
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "index.html"));
+  res.sendFile(CLIENT_INDEX);
 });
 
 function loadEnvFile(filePath) {
@@ -67,8 +92,6 @@ loadEnvFile(path.resolve(__dirname, ".env"));
 loadEnvFile(path.resolve(__dirname, ".env.local"));
 loadEnvFile(path.resolve(__dirname, "../.env"));
 loadEnvFile(path.resolve(__dirname, "../.env.local"));
-
-
 
 function readSmtpResponse(socket) {
   return new Promise((resolve, reject) => {
@@ -267,7 +290,6 @@ function sendConfigCheckResponse(res) {
   });
 }
 
-
 function parseAllowedChatSites() {
   const defaults = [
     "http://www.cbsdearkbarendrecht.nl/",
@@ -318,7 +340,7 @@ function normalizeText(value) {
   return String(value || "")
     .toLowerCase()
     .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "");
+    .replace(/[\u0300-\u036f]/g, "");
 }
 
 function tokenize(value) {
@@ -537,7 +559,6 @@ async function handleChatRequest(req, res) {
 app.post("/api/chat", handleChatRequest);
 app.post("/chat", handleChatRequest);
 
-
 app.get("/api/contact/config-check", (req, res) => sendConfigCheckResponse(res));
 app.get("/api/contact/configcheck", (req, res) => sendConfigCheckResponse(res));
 app.get("/api/config-check", (req, res) => sendConfigCheckResponse(res));
@@ -553,42 +574,39 @@ app.post("/api/contact", async (req, res) => {
     return res.status(400).json({ error: "Ongeldig e-mailadres." });
   }
 
-  const secureFromEnv = process.env.SMTP_SECURE;
-  const smtpPort = Number(process.env.SMTP_PORT || 465);
-
-  const smtpConfig = {
-    host: process.env.SMTP_HOST,
-    port: smtpPort,
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
-    secure: parseBool(secureFromEnv, smtpPort === 465),
-    allowInvalidCert: parseBool(process.env.SMTP_ALLOW_INVALID_CERT, false),
-    from: process.env.MAIL_FROM || process.env.SMTP_USER,
-    to: process.env.MAIL_TO || "pcpocontact@gmail.com"
+  const SMTP_CONFIG = {
+    host: "smtp.gmail.com",
+    port: 587,
+    secure: false,
+    user: "pcpocontact@gmail.com",
+    pass: "ktfv hhyp qosj ijil",
+    from: "pcpocontact@gmail.com",
+    to: "pcpocontact@gmail.com"
   };
 
-  const missingVars = getMissingSmtpVars(smtpConfig);
+  // Check voor ontbrekende SMTP-gegevens
+  const missingVars = getMissingSmtpVars(SMTP_CONFIG);
   if (missingVars.length > 0) {
     return res.status(500).json({
-      error: `Mailserver niet geconfigureerd. Ontbrekend: ${missingVars.join(", ")}.`,
-      missing: missingVars
+      error: `Mailserver niet geconfigureerd. Ontbrekend: ${missingVars.join(", ")}.`
     });
   }
 
+  // Check voor voorbeeldwaarden (placeholders)
   if (
-    isPlaceholderValue(smtpConfig.host) ||
-    isPlaceholderValue(smtpConfig.user) ||
-    isPlaceholderValue(smtpConfig.pass) ||
-    isPlaceholderValue(smtpConfig.from)
+    isPlaceholderValue(SMTP_CONFIG.host) ||
+    isPlaceholderValue(SMTP_CONFIG.user) ||
+    isPlaceholderValue(SMTP_CONFIG.pass) ||
+    isPlaceholderValue(SMTP_CONFIG.from)
   ) {
     return res.status(500).json({
-      error:
-        "Je gebruikt voorbeeldwaarden (zoals smtp.jouwdomein.nl of jouw_smtp_user). Vervang deze door je echte SMTP-gegevens."
+      error: "Je gebruikt voorbeeldwaarden (zoals smtp.jouwdomein.nl of jouw_smtp_user). Vervang deze door je echte SMTP-gegevens."
     });
   }
 
+  // Verstuur de mail
   try {
-    await sendMailViaSmtp(smtpConfig, {
+    await sendMailViaSmtp(SMTP_CONFIG, {
       replyTo: email,
       subject: `[Contactformulier] ${subject}`,
       text: `Naam: ${name}\nE-mail: ${email}\n\nBericht:\n${message}`
@@ -601,8 +619,11 @@ app.post("/api/contact", async (req, res) => {
   }
 });
 
+// Server starten
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
+  console.log(`Serving static files from: ${CLIENT_DIR}`);
+  console.log(`Root page file: ${CLIENT_INDEX}`);
   console.log("Config check endpoints:");
   console.log(` - http://localhost:${PORT}/api/contact/config-check`);
   console.log(` - http://localhost:${PORT}/api/contact/configcheck`);
