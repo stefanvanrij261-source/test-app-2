@@ -2,13 +2,398 @@
 <html lang="nl">
 <head>
   <meta charset="UTF-8">
-  <title data-i18n="metaTitleNews">Nieuws</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-i18n="metaTitleSchoolInfo">CBS Groen van Prinsterer</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      background: linear-gradient(135deg, #fef08a 0%, #fef3c7 50%, #fde68a 100%);
+      font-family: 'Comic Sans MS', 'Arial', sans-serif;
+      min-height: 100vh;
+    }
+
+    .school-info-page {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .back-button {
+      display: inline-block;
+      margin-bottom: 25px;
+      padding: 15px 30px;
+      background: linear-gradient(135deg, #ff6b6b, #ff8c42);
+      color: white;
+      text-decoration: none;
+      border-radius: 50px;
+      font-weight: 900;
+      font-size: 1.1rem;
+      border: 4px solid white;
+      box-shadow: 0 8px 15px rgba(255, 100, 100, 0.3);
+      transition: transform 0.3s ease;
+      cursor: pointer;
+    }
+
+    .back-button:hover {
+      transform: scale(1.08) rotate(2deg);
+    }
+
+    .header-card {
+      background: white;
+      border-radius: 30px;
+      padding: 40px;
+      margin-bottom: 30px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+      border: 5px solid #4ecdc4;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header-card::before {
+      content: '';
+      position: absolute;
+      top: -50px;
+      right: -50px;
+      width: 200px;
+      height: 200px;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><circle cx="50" cy="50" r="40" fill="%234ecdc4" opacity="0.1"/><circle cx="150" cy="100" r="50" fill="%23ff6b6b" opacity="0.1"/></svg>');
+      border-radius: 50%;
+    }
+
+    .header-content {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 150px 1fr;
+      gap: 30px;
+      align-items: center;
+    }
+
+    .logo-box {
+      background: linear-gradient(135deg, #4ecdc4, #44b8a8);
+      padding: 20px;
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: 0 8px 20px rgba(78, 205, 196, 0.4);
+    }
+
+    .logo-box img {
+      width: 100%;
+      height: auto;
+    }
+
+    .header-text h1 {
+      font-size: 2.5rem;
+      color: #2d5a5a;
+      margin: 0 0 15px 0;
+      line-height: 1.1;
+    }
+
+    .header-text p {
+      font-size: 1.1rem;
+      color: #4ecdc4;
+      margin: 10px 0;
+      font-weight: 600;
+    }
+
+    .mission-box {
+      background: linear-gradient(135deg, #ff6b6b, #ff8c42);
+      border-radius: 25px;
+      padding: 25px;
+      margin: 30px 0;
+      color: white;
+      font-size: 1.6rem;
+      font-weight: 900;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(255, 100, 100, 0.3);
+      border: 4px solid white;
+      position: relative;
+      transform: rotate(-2deg);
+    }
+
+    .mission-box::before {
+      content: '✨';
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 2.5rem;
+    }
+
+    .mission-box::after {
+      content: '✨';
+      position: absolute;
+      bottom: -20px;
+      right: -20px;
+      font-size: 2rem;
+    }
+
+    .school-image-section {
+      background: white;
+      border-radius: 25px;
+      padding: 30px;
+      margin: 30px 0;
+      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.1);
+      border-left: 8px solid #4ecdc4;
+      text-align: center;
+    }
+
+    .school-image-section img {
+      width: 100%;
+      max-width: 600px;
+      height: auto;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      margin: 15px 0;
+    }
+
+    .school-image-section h3 {
+      font-size: 1.3rem;
+      color: #4ecdc4;
+      margin: 15px 0;
+    }
+
+    .school-image-section p {
+      color: #2d5a5a;
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 25px;
+      margin: 30px 0;
+    }
+
+    .info-box {
+      background: white;
+      border-radius: 25px;
+      padding: 25px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+      border: 4px solid #ffd700;
+      position: relative;
+      transform: rotate(1deg);
+      transition: transform 0.3s ease;
+    }
+
+    .info-box:nth-child(even) {
+      transform: rotate(-1deg);
+    }
+
+    .info-box:hover {
+      transform: rotate(0deg) scale(1.05);
+    }
+
+    .info-box h3 {
+      font-size: 1.4rem;
+      color: #ff6b6b;
+      margin: 0 0 15px 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .info-box p, .info-box a {
+      font-size: 1rem;
+      color: #2d5a5a;
+      margin: 8px 0;
+      line-height: 1.6;
+    }
+
+    .info-box a {
+      color: #4ecdc4;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .info-box a:hover {
+      text-decoration: underline;
+    }
+
+    .content-card {
+      background: white;
+      border-radius: 25px;
+      padding: 35px;
+      margin: 25px 0;
+      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.1);
+      border-left: 8px solid #4ecdc4;
+    }
+
+    .content-card h2 {
+      font-size: 2rem;
+      color: #ff6b6b;
+      margin: 0 0 20px 0;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .content-card h3 {
+      font-size: 1.3rem;
+      color: #4ecdc4;
+      margin: 25px 0 15px 0;
+      border-bottom: 3px dashed #ffd700;
+      padding-bottom: 10px;
+    }
+
+    .content-card ul {
+      list-style: none;
+      padding: 0;
+      margin: 15px 0;
+    }
+
+    .content-card li {
+      padding: 12px 0;
+      padding-left: 40px;
+      position: relative;
+      font-size: 1.05rem;
+      color: #2d5a5a;
+      line-height: 1.6;
+    }
+
+    .content-card li::before {
+      content: '⭐';
+      position: absolute;
+      left: 0;
+      font-size: 1.3rem;
+    }
+
+    .highlight-box {
+      background: linear-gradient(135deg, #e0f7f4, #fff9c4);
+      border-radius: 20px;
+      padding: 25px;
+      margin: 20px 0;
+      border: 3px solid #4ecdc4;
+    }
+
+    .highlight-box p {
+      color: #2d5a5a;
+      font-size: 1.05rem;
+      line-height: 1.8;
+      margin: 10px 0;
+    }
+
+    .highlight-box ul {
+      list-style: none;
+      padding: 0;
+      margin: 15px 0;
+    }
+
+    .highlight-box li {
+      padding: 12px 0;
+      padding-left: 40px;
+      position: relative;
+      font-size: 1.05rem;
+      color: #2d5a5a;
+      line-height: 1.6;
+    }
+
+    .highlight-box li::before {
+      content: '💚';
+      position: absolute;
+      left: 0;
+      font-size: 1.3rem;
+    }
+
+    .contact-buttons {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      margin: 30px 0;
+      justify-content: center;
+    }
+
+    .contact-btn {
+      display: inline-block;
+      padding: 18px 28px;
+      border-radius: 50px;
+      font-weight: 900;
+      font-size: 1rem;
+      text-decoration: none;
+      border: 4px solid white;
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease;
+      color: white;
+      text-align: center;
+    }
+
+    .contact-btn:nth-child(1) {
+      background: linear-gradient(135deg, #4ecdc4, #44b8a8);
+    }
+
+    .contact-btn:nth-child(2) {
+      background: linear-gradient(135deg, #ff6b6b, #ff4444);
+    }
+
+    .contact-btn:nth-child(3) {
+      background: linear-gradient(135deg, #ffd700, #ffb700);
+      color: #2d5a5a;
+    }
+
+    .contact-btn:hover {
+      transform: scale(1.1);
+    }
+
+    .footer-card {
+      background: linear-gradient(135deg, #4ecdc4, #44b8a8);
+      border-radius: 25px;
+      padding: 35px;
+      text-align: center;
+      color: white;
+      margin-top: 30px;
+      box-shadow: 0 10px 40px rgba(78, 205, 196, 0.4);
+      border: 4px solid white;
+    }
+
+    .footer-card h2 {
+      font-size: 2rem;
+      margin: 0 0 15px 0;
+    }
+
+    .footer-card p {
+      font-size: 1.1rem;
+      margin: 10px 0;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 768px) {
+      .header-content {
+        grid-template-columns: 1fr;
+      }
+
+      .header-card {
+        padding: 25px;
+      }
+
+      .header-text h1 {
+        font-size: 1.8rem;
+      }
+
+      .mission-box {
+        font-size: 1.3rem;
+      }
+
+      .contact-buttons {
+        flex-direction: column;
+      }
+
+      .contact-btn {
+        width: 100%;
+      }
+
+      .content-card {
+        padding: 25px;
+      }
+
+      .school-image-section {
+        padding: 20px;
+      }
+    }
+  </style>
 </head>
 <body>
-  <h1 style="text-align: center; color: #38B6FF; margin-top: 50px;" data-i18n="pageNews">Nieuws</h1>
-
   <button id="menuToggle">➤</button>
 
   <nav id="sideMenu">
@@ -18,6 +403,186 @@
     <a href="pagina4.html" data-i18n="navContact">Contact</a>
     <a href="index.html" style="padding: 40px; display:block;" data-i18n="navHome">Home</a>
   </nav>
+
+  <div class="translate-controls" id="translateControls">
+    <button id="languageToggle" class="language-toggle" type="button" aria-expanded="false" aria-controls="languageMenu" aria-label="Kies een taal">
+      <span id="languageToggleFlag">🇳🇱 / 🇳🇱</span>
+    </button>
+    <div id="languageMenu" class="language-menu" hidden>
+      <button type="button" data-language-option="nl">🇳🇱 NL</button>
+      <button type="button" data-language-option="en">🇬🇧 EN</button>
+      <button type="button" data-language-option="de">🇩🇪 DE</button>
+      <button type="button" data-language-option="fr">🇫🇷 FR</button>
+      <button type="button" data-language-option="es">🇪🇸 ES</button>
+    </div>
+    <label for="languageSelect" class="sr-only">Vertaal de hele pagina:</label>
+    <select id="languageSelect" aria-label="Kies een taal" class="sr-only">
+      <option value="nl">Nederlands</option>
+      <option value="en">English</option>
+      <option value="de">Deutsch</option>
+      <option value="fr">Français</option>
+      <option value="es">Español</option>
+    </select>
+  </div>
+
+  <main class="school-info-page">
+    <button class="back-button" onclick="history.back()">← Terug naar scholen</button>
+
+    <div class="header-card">
+      <div class="header-content">
+        <div class="logo-box">
+          <img src="images/logo10.webp" alt="CBS Groen van Prinsterer logo">
+        </div>
+        <div class="header-text">
+          <h1>🌱 CBS Groen van Prinsterer 🌱</h1>
+          <p>📍 Barendrecht & Ridderkerk</p>
+          <p>Een school waar kinderen blij groeien!</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="mission-box">
+      🌟 Groeien doe je op de Groen! 🌟
+    </div>
+
+    <div class="school-image-section">
+      <h3>📸 Welkom op onze school!</h3>
+      <img src="images/groen-van-prinsterer.png" alt="CBS Groen van Prinsterer schoolgebouw">
+      <p>Dit is ons mooie schoolgebouw waar kinderen elke dag blij groeien en leren!</p>
+    </div>
+
+    <div class="info-grid">
+      <div class="info-box">
+        <h3>📞 Bel ons!</h3>
+        <a href="tel:0180612557"><strong>0180-612557</strong></a>
+        <p>We helpen je graag met vragen!</p>
+      </div>
+
+      <div class="info-box">
+        <h3>📧 Mail ons!</h3>
+        <a href="mailto:info_prinsterer@pcpobr.nl"><strong>info_prinsterer@pcpobr.nl</strong></a>
+        <p>Stuur je vragen op!</p>
+      </div>
+
+      <div class="info-box">
+        <h3>👥 Leerlingen</h3>
+        <p><strong>440-500 kinderen</strong></p>
+        <p>Een gezellige schoolfamilie!</p>
+      </div>
+
+      <div class="info-box">
+        <h3>🏫 Locaties</h3>
+        <p><strong>Stellingmolen 10</strong><br>2992 DN Barendrecht</p>
+        <p><strong>Hof van Máxima</strong><br>Hedwigepolder 2</p>
+      </div>
+    </div>
+
+    <div class="content-card">
+      <h2>🎓 Wat leer je hier?</h2>
+      
+      <h3>De basis (wat je zeker leert)</h3>
+      <ul>
+        <li><strong>Taal</strong> – Lekker veel lezen en schrijven!</li>
+        <li><strong>Rekenen</strong> – Plezier in getallen!</li>
+        <li><strong>Spelling</strong> – Woorden correct schrijven</li>
+        <li><strong>Lezen</strong> – Verhalen en informatie</li>
+      </ul>
+
+      <h3>Nog veel meer!</h3>
+      <ul>
+        <li>🌍 <strong>Wereldoriëntatie</strong> – Geschiedenis en aardrijkskunde</li>
+        <li>🔬 <strong>Natuur en techniek</strong> – De wereld om ons heen</li>
+        <li>🎨 <strong>Kunst & cultuur</strong> – Creativiteit!</li>
+        <li>🎵 <strong>Muziek</strong> – Zingen en spelen</li>
+        <li>⚽ <strong>Beweging</strong> – Actief en gezond</li>
+        <li>💻 <strong>Digitale vaardigheden</strong> – Moderne technologie</li>
+      </ul>
+
+      <div class="highlight-box">
+        <strong>💡 Moderne lesmethodes</strong> - We gebruiken moderne lesmethodes en digitale hulpmiddelen om het onderwijs zo effectief mogelijk te maken!
+      </div>
+    </div>
+
+    <div class="content-card">
+      <h2>⭐ Extra ondersteuning en talentontwikkeling</h2>
+      
+      <p>De Groen van Prinsterer biedt ondersteuning voor leerlingen die extra begeleiding nodig hebben:</p>
+      <ul>
+        <li>Extra instructie bij rekenen en taal</li>
+        <li>Ondersteuning bij leerproblemen</li>
+        <li>Begeleiding door een intern begeleider</li>
+        <li>Samenwerking met specialisten</li>
+      </ul>
+
+      <p><strong>We werken samen met het samenwerkingsverband passend onderwijs RiBA.</strong></p>
+    </div>
+
+    <div class="content-card">
+      <h2>✨ Onze christelijke identiteit</h2>
+      <p>Op onze school horen Bijbelverhalen, bidden we samen en vieren we feestdagen. We leren ook veel over respect en zorg voor elkaar.</p>
+      
+      <div class="highlight-box">
+        <ul>
+          <li>📖 Bijbelverhalen in de klas</li>
+          <li>🙏 Samen bidden</li>
+          <li>🎄 Kerst vieren</li>
+          <li>🐣 Pasen vieren</li>
+          <li>❤️ Kindlief en voorzichtig voor elkaar</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="content-card">
+      <h2>👨‍👩‍👧‍👦 Ouders en communicatie</h2>
+      <p>Ouders spelen een belangrijke rol in de school!</p>
+      
+      <h3>Hoe communiceren we?</h3>
+      <ul>
+        <li>Oudergesprekken</li>
+        <li>Nieuwsbrieven</li>
+        <li>De ouderapp Social Schools</li>
+      </ul>
+
+      <h3>Activiteiten met ouders</h3>
+      <ul>
+        <li>Schoolreis</li>
+        <li>Sportdag</li>
+        <li>Projecten</li>
+        <li>Vieringen</li>
+      </ul>
+    </div>
+
+    <div class="content-card">
+      <h2>📅 Nieuws en activiteiten</h2>
+      <p>Voorbeelden van activiteiten op De Fontein:</p>
+      <ul>
+        <li>🎄 Kerstviering</li>
+        <li>🐣 Paasviering</li>
+        <li>⚽ Sportdagen</li>
+        <li>🚌 Schoolreis</li>
+        <li>📚 Projectweken</li>
+        <li>🎭 Musical van groep 8</li>
+      </ul>
+    </div>
+
+    <div style="text-align: center; margin: 40px 0;">
+      <div class="contact-buttons">
+        <a href="tel:0180612557" class="contact-btn">📞 Bel ons!</a>
+        <a href="mailto:info_prinsterer@pcpobr.nl" class="contact-btn">📧 Mail ons!</a>
+        <a href="https://www.prinsterer.nl/" target="_blank" rel="noopener noreferrer" class="contact-btn">🌐 Website</a>
+      </div>
+    </div>
+
+    <div class="footer-card">
+      <h2>🌱 Kom je ons opzoeken?</h2>
+      <p>We hopen je gauw te zien op school! Stuur eerst even een mailtje zodat we klaar zijn.</p>
+      <p style="font-size: 1.3rem; margin-top: 20px;">✨ Groeien doe je op de Groen! ✨</p>
+    </div>
+
+    <div style="text-align: center; margin-top: 40px;">
+      <button class="back-button" onclick="history.back()">← Terug naar scholen</button>
+    </div>
+  </main>
 
   <script src="app.js"></script>
 </body>

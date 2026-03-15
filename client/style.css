@@ -19,6 +19,7 @@ body {
   background-repeat: no-repeat;
   min-height: 100vh;
 }
+
 .pagina1-car {
   position: fixed;
   left: 14vw;
@@ -58,6 +59,14 @@ body {
   background-position: 0% 0%;
   background-repeat: no-repeat;
 }
+
+.pagina1-page.info-page {
+  background-image: url('images/achtergrond.ng');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
 .video-section {
   margin: -13px 0 0 4.25vw;
   width: fit-content;
@@ -305,7 +314,7 @@ body {
     background-image: url('images/telefoon-achtergrond-index.html.jpg') !important;
   }
 
-  body.pagina1-page {
+  body.pagina1-page:not(.info-page) {
     background-image: url('images/telefoon-pagina1.jpg') !important;
   }
 
@@ -345,7 +354,7 @@ body {
     background-image: url('images/index.achtergrond-beeldschermgroote2.jpg') !important;
   }
 
-  body.pagina1-page {
+  body.pagina1-page:not(.info-page) {
     background-image: url('images/PCPO.rotonde.png') !important;
     background-position: 8% 0% !important;
     background-size: 150vh !important;
@@ -378,7 +387,7 @@ body {
     background-image: url('images/achtergrond.jpg') !important;
   }
 
-  body.pagina1-page {
+  body.pagina1-page:not(.info-page) {
     background-image: url('images/PCPO.rotonde.png') !important;
     background-position: 0% 0% !important;
     background-size: 160vh !important;
@@ -467,10 +476,14 @@ body {
   border: 1px solid #ddd;
   border-radius: 12px;
   padding: 8px;
-  display: grid;
+  display: none;
   gap: 6px;
   min-width: 120px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+}
+
+.language-menu.is-open {
+  display: grid;
 }
 
 .language-menu button {
@@ -481,6 +494,7 @@ body {
   text-align: left;
   cursor: pointer;
   font-weight: 700;
+  transition: background-color 0.2s ease;
 }
 
 .language-menu button:hover {
@@ -742,88 +756,183 @@ body {
   z-index: 3300;
 }
 
- .language-toggle {
+.language-toggle {
   min-width: 128px;
   border: 0;
-  background: linear-gradient(130deg, #f5c400, #e8af00);
+  background: transparent;
   color: #5a3700;
   border-radius: 999px;
   padding: 10px 16px;
   font-size: 18px;
   font-weight: 800;
-  box-shadow: 0 10px 24px rgba(132, 86, 0, 0.26);
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
+  transition: all 0.2s ease;
 }
 
- .language-toggle::after {
+.language-toggle::after {
   content: "▾";
   font-size: 15px;
   transform: translateY(-1px);
   transition: transform 0.2s ease;
 }
 
- .language-toggle[aria-expanded="true"]::after {
+.language-toggle[aria-expanded="true"]::after {
   transform: rotate(180deg) translateY(1px);
 }
 
- .language-menu {
+.language-menu {
   margin-top: 10px;
-  background: rgba(255, 255, 255, 0.96);
-  border: 1px solid #f0c14b;
   border-radius: 14px;
-  padding: 8px;
+  padding: 10px;
   display: none;
-  gap: 6px;
+  gap: 8px;
   min-width: 128px;
-  box-shadow: 0 12px 26px rgba(120, 76, 0, 0.26);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(8px);
 }
 
- .language-menu.is-open {
+.language-menu.is-open {
   display: grid;
 }
 
 /* Home page */
+.home-page .language-menu {
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
 .home-page .language-menu button {
-  background: rgba(255, 255, 255, 0.8); /* wit, beetje doorzichtig */
-  color: #000; /* zwart tekst */
-  border: 1px solid #000; /* zwarte outline */
+  background: rgba(255, 255, 255, 0.7);
+  color: #333;
+  border: 1px solid rgba(200, 200, 200, 0.3);
+}
+
+.home-page .language-menu button:hover {
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.home-page .language-toggle {
+  background: rgba(255, 255, 255, 0.85);
+  color: #333;
+  border: 1px solid rgba(200, 200, 200, 0.3);
 }
 
 /* Info page */
+.info-page .language-menu {
+  background: rgba(35, 164, 85, 0.15);
+  border: 1px solid rgba(35, 164, 85, 0.3);
+}
+
 .info-page .language-menu button {
-  background: rgba(35, 164, 85, 0.8); /* groen, beetje doorzichtig */
-  color: #000;
-  border: 1px solid #000;
+  background: rgba(35, 164, 85, 0.6);
+  color: #fff;
+  border: 1px solid rgba(35, 164, 85, 0.4);
+}
+
+.info-page .language-menu button:hover {
+  background: rgba(35, 164, 85, 0.75);
+}
+
+.info-page .language-toggle {
+  background: rgba(35, 164, 85, 0.7);
+  color: #fff;
+  border: 1px solid rgba(35, 164, 85, 0.3);
 }
 
 /* Schools page */
+.schools-page .language-menu {
+  background: rgba(31, 111, 229, 0.15);
+  border: 1px solid rgba(31, 111, 229, 0.3);
+}
+
 .schools-page .language-menu button {
-  background: rgba(31, 111, 229, 0.8); /* blauw, beetje doorzichtig */
-  color: #000;
-  border: 1px solid #000;
+  background: rgba(31, 111, 229, 0.6);
+  color: #fff;
+  border: 1px solid rgba(31, 111, 229, 0.4);
+}
+
+.schools-page .language-menu button:hover {
+  background: rgba(31, 111, 229, 0.75);
+}
+
+.schools-page .language-toggle {
+  background: rgba(31, 111, 229, 0.7);
+  color: #fff;
+  border: 1px solid rgba(31, 111, 229, 0.3);
 }
 
 /* Contact page */
+.contact-page .language-menu {
+  background: rgba(214, 40, 40, 0.15);
+  border: 1px solid rgba(214, 40, 40, 0.3);
+}
+
 .contact-page .language-menu button {
-  background: rgba(214, 40, 40, 0.8); /* rood, beetje doorzichtig */
-  color: #000;
-  border: 1px solid #000;
+  background: rgba(214, 40, 40, 0.6);
+  color: #fff;
+  border: 1px solid rgba(214, 40, 40, 0.4);
+}
+
+.contact-page .language-menu button:hover {
+  background: rgba(214, 40, 40, 0.75);
+}
+
+.contact-page .language-toggle {
+  background: rgba(214, 40, 40, 0.7);
+  color: #fff;
+  border: 1px solid rgba(214, 40, 40, 0.3);
 }
 
 /* News & Agenda pages */
-.news-page .language-menu button,
-.agenda-page .language-menu button {
-  background: rgba(255, 255, 255, 0.8); /* wit, beetje doorzichtig */
-  color: #000;
-  border: 1px solid #000;
+.news-page .language-menu,
+.agenda-page .language-menu {
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.5);
 }
 
- .language-menu button:hover {
-  background: #ffeeba;
+.news-page .language-menu button,
+.agenda-page .language-menu button {
+  background: rgba(255, 255, 255, 0.7);
+  color: #333;
+  border: 1px solid rgba(200, 200, 200, 0.3);
+}
+
+.news-page .language-menu button:hover,
+.agenda-page .language-menu button:hover {
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.news-page .language-toggle,
+.agenda-page .language-toggle {
+  background: rgba(255, 255, 255, 0.85);
+  color: #333;
+  border: 1px solid rgba(200, 200, 200, 0.3);
+}
+
+/* Quiz page specific */
+.quiz-page .language-menu {
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(245, 196, 0, 0.3);
+}
+
+.quiz-page .language-menu button {
+  background: rgba(245, 196, 0, 0.4);
+  color: #5a3700;
+  border: 1px solid rgba(245, 196, 0, 0.2);
+}
+
+.quiz-page .language-menu button:hover {
+  background: rgba(245, 196, 0, 0.6);
+}
+
+.quiz-page .language-toggle {
+  background: rgba(245, 196, 0, 0.5);
+  color: #5a3700;
+  border: 1px solid rgba(245, 196, 0, 0.2);
 }
 
 .quiz-wrapper {

@@ -5,17 +5,56 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title data-i18n="metaTitleHome">Home</title>
   <link rel="stylesheet" href="/style.css">
+  <style>
+    .logo-container {
+      position: fixed;
+      top: 25px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 3100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .logo-container img {
+      width: 160px;
+      height: auto;
+    }
+
+    .white-cover {
+      position: fixed;
+      top: 28px;
+      left: 6px;
+      width: 180px;
+      height: 57px;
+      background: white;
+      z-index: 3050;
+      border-radius: 4px;
+    }
+
+    .index-page #menuToggle {
+      border: 1.5px solid #000 !important;
+    }
+  </style>
 </head>
 
 <body class="index-page home-page" style="
-  margin: 0;
-  height: 100vh;
-  background-image: url('/images/achtergrond2.png');
-  background-size: 100%;
-  background-position: center -5%;
-  background-repeat: no-repeat;
+  margin: 0 !important;
+  height: 100vh !important;
+  background-image: url('/images/achtergrond2.png') !important;
+  background-size: 100% !important;
+  background-position: center -5% !important;
+  background-repeat: no-repeat !important;
 ">
   <div class="top-overlay-image" aria-hidden="true"></div>
+  
+  <div class="white-cover"></div>
+  
+  <div class="logo-container">
+    <img src="images/logo.png" alt="PCPO Logo" data-i18n-alt="logoAlt">
+  </div>
+  
   <div class="translate-controls" id="translateControls">
     <button id="languageToggle" class="language-toggle" type="button" aria-expanded="false" aria-controls="languageMenu" aria-label="Kies een taal" data-i18n-aria-label="translateAria">
       <span id="languageToggleFlag">🇳🇱 / 🇳🇱</span>
