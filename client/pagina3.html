@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Onze scholen</title>
+  <title data-i18n="metaTitleSchools">Onze scholen</title>
   <link rel="stylesheet" href="style.css">
   <link
     rel="stylesheet"
@@ -347,18 +347,39 @@
     }
   </style>
 </head>
-<body>
+<body class="schools-page">
+  <div class="translate-controls" id="translateControls">
+    <button id="languageToggle" class="language-toggle" type="button" aria-expanded="false" aria-controls="languageMenu" aria-label="Kies een taal" data-i18n-aria-label="translateAria">
+      <span id="languageToggleFlag">🇳🇱 / 🇳🇱</span>
+    </button>
+    <div id="languageMenu" class="language-menu" hidden>
+      <button type="button" data-language-option="nl">🇳🇱 NL</button>
+      <button type="button" data-language-option="en">🇬🇧 EN</button>
+      <button type="button" data-language-option="de">🇩🇪 DE</button>
+      <button type="button" data-language-option="fr">🇫🇷 FR</button>
+      <button type="button" data-language-option="es">🇪🇸 ES</button>
+    </div>
+    <label for="languageSelect" class="sr-only" data-i18n="translateLabel">Vertaal de hele pagina:</label>
+    <select id="languageSelect" aria-label="Kies een taal" class="sr-only" data-i18n-aria-label="translateAria">
+      <option value="nl">Nederlands</option>
+      <option value="en">English</option>
+      <option value="de">Deutsch</option>
+      <option value="fr">Français</option>
+      <option value="es">Español</option>
+    </select>
+  </div>
+
   <main class="page">
-    <h1>Onze scholen</h1>
+    <h1 data-i18n="mapTitle">Onze scholen</h1>
 
-    <section class="card" aria-label="Kaart en schoolzoeker">
+    <section class="card" aria-label="Kaart en schoolzoeker" data-i18n-aria-label="mapSectionAria">
       <div class="controls">
-        <input id="addressInput" type="text" placeholder="Vul adres in" aria-label="Vul adres in">
-        <button id="searchButton" type="button">Zoeken</button>
-        <button id="openTopFilterButton" type="button">Filter locaties</button>
+        <input id="addressInput" type="text" placeholder="Vul adres in" aria-label="Vul adres in" data-i18n-placeholder="mapSearchPlaceholder" data-i18n-aria-label="mapSearchPlaceholder">
+        <button id="searchButton" type="button" data-i18n="mapSearchButton">Zoeken</button>
+        <button id="openTopFilterButton" type="button" data-i18n="mapFilterLocations">Filter locaties</button>
 
-        <div id="topFilterPanel" class="top-filter" aria-label="Filter locaties">
-          <p class="top-filter__title">Stad</p>
+        <div id="topFilterPanel" class="top-filter" aria-label="Filter locaties" data-i18n-aria-label="mapFilterLocations">
+          <p class="top-filter__title" data-i18n="mapCity">Stad</p>
           <label class="city-check" for="cityBarendrechtCheck">
             <input id="cityBarendrechtCheck" type="checkbox" checked>
             Barendrecht <span id="countBarendrecht" class="city-count">0</span>
@@ -367,22 +388,22 @@
             <input id="cityRidderkerkCheck" type="checkbox" checked>
             Ridderkerk <span id="countRidderkerk" class="city-count">0</span>
           </label>
-          <button id="applyTopFilterButton" type="button">Filter</button>
+          <button id="applyTopFilterButton" type="button" data-i18n="mapFilterButton">Filter</button>
         </div>
       </div>
 
-      <p id="statusMessage" aria-live="polite"></p>
+      <p id="statusMessage" aria-live="polite" data-i18n="mapStatusFilterActive"></p>
       <div id="mapShell" class="map-shell">
-        <button id="fullscreenMapButton" type="button">Schermvullend</button>
-        <div id="schoolMap" aria-label="Kaart met schoollocaties"></div>
+        <button id="fullscreenMapButton" type="button" data-i18n="mapFullscreen">Schermvullend</button>
+        <div id="schoolMap" aria-label="Kaart met schoollocaties" data-i18n-aria-label="mapAria"></div>
       </div>
 
-      <p class="results-title">Scholen op afstand (dichtstbij eerst)</p>
+      <p class="results-title" data-i18n="mapResultsTitle">Scholen op afstand (dichtstbij eerst)</p>
       <ol id="nearestSchools"></ol>
-      <p class="hint">Tip: beweeg met je muis over een blauwe marker om naam en adres te zien.</p>
+      <p class="hint" data-i18n="mapHint">Tip: beweeg met je muis over een blauwe marker om naam en adres te zien.</p>
     </section>
 
-    <section aria-label="Scholenoverzicht">
+    <section aria-label="Scholenoverzicht" data-i18n-aria-label="mapSchoolOverviewAria">
       <div id="schoolCardsGrid" class="school-cards-grid"></div>
     </section>
   </main>
@@ -427,6 +448,10 @@
     const statusMessage = document.getElementById('statusMessage');
     const nearestSchools = document.getElementById('nearestSchools');
     const schoolCardsGrid = document.getElementById('schoolCardsGrid');
+
+    function t(key, fallback = '') {
+      return window.getLocaleText ? (window.getLocaleText(key) || fallback) : fallback;
+    }
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
@@ -555,16 +580,16 @@
         card.className = 'school-card';
         card.innerHTML = `
           <div class="school-card__logo">
-            <img src="${getSchoolLogoBySchool(school)}" alt="Logo van ${school.name}">
+            <img src="${getSchoolLogoBySchool(school)}" alt="${t('mapLogoAltPrefix','Logo van')} ${school.name}">
           </div>
           <div class="school-card__body">
             <h3 class="school-card__name">${school.name}</h3>
             <span class="school-card__city">${school.city}</span>
             <p class="school-card__meta">📍 ${school.address}</p>
-            <p class="school-card__meta">✉️ Neem contact op met de school voor meer info.</p>
+            <p class="school-card__meta">${t('mapCardContact','✉️ Neem contact op met de school voor meer info.')}</p>
             <div class="school-card__actions">
-              <a href="#" role="button">Meer info</a>
-              <a href="${school.website || '#'}" role="button"${school.website ? ' target=\"_blank\" rel=\"noopener noreferrer\"' : ''}>Website</a>
+              <a href="#" role="button">${t('mapCardMoreInfo','Meer info')}</a>
+              <a href="${school.website || '#'}" role="button"${school.website ? ' target=\"_blank\" rel=\"noopener noreferrer\"' : ''}>${t('mapCardWebsite','Website')}</a>
             </div>
           </div>
         `;
@@ -590,16 +615,16 @@
       }
 
       if (!filteredSchools.length) {
-        setStatus('Geen scholen gevonden voor deze filter.');
+        setStatus(t('mapStatusNoSchools','Geen scholen gevonden voor deze filter.'));
       } else {
-        setStatus('Filter actief. Beweeg met de muis over een marker om naam en adres te zien.');
+        setStatus(t('mapStatusFilterActive','Filter actief. Beweeg met de muis over een marker om naam en adres te zien.'));
       }
     }
 
     function toggleMapFullscreen() {
       mapShell.classList.toggle('is-fullscreen');
       const isFullscreen = mapShell.classList.contains('is-fullscreen');
-      fullscreenMapButton.textContent = isFullscreen ? 'Verkleinen' : 'Schermvullend';
+      fullscreenMapButton.textContent = isFullscreen ? t('mapFullscreenExit','Verkleinen') : t('mapFullscreen','Schermvullend');
       document.body.style.overflow = isFullscreen ? 'hidden' : '';
       setTimeout(() => map.invalidateSize(), 160);
     }
@@ -607,7 +632,7 @@
     async function fetchJson(endpoint) {
       const response = await fetch(endpoint);
       if (!response.ok) {
-        throw new Error('Adres opzoeken mislukt');
+        throw new Error(t('mapLookupFailed','Adres opzoeken mislukt'));
       }
       return response.json();
     }
@@ -642,17 +667,17 @@
     async function handleSearch() {
       const inputValue = addressInput.value.trim();
       if (!inputValue) {
-        setStatus('Vul eerst een adres in.');
+        setStatus(t('mapStatusFillAddress','Vul eerst een adres in.'));
         return;
       }
 
-      setStatus('Adres zoeken...');
+      setStatus(t('mapStatusSearching','Adres zoeken...'));
       searchButton.disabled = true;
 
       try {
         const location = await geocodeAddress(inputValue);
         if (!location) {
-          setStatus('Adres niet gevonden. Probeer een vollediger adres.');
+          setStatus(t('mapStatusNotFound','Adres niet gevonden. Probeer een vollediger adres.'));
           return;
         }
 
@@ -661,7 +686,7 @@
         }
 
         userMarker = L.marker([location.lat, location.lon], { icon: redIcon }).addTo(map);
-        userMarker.bindTooltip('Jouw adres', {
+        userMarker.bindTooltip(t('mapYourAddress','Jouw adres'), {
           direction: 'top',
           sticky: true,
           opacity: 0.95
@@ -670,10 +695,10 @@
         renderNearestSchools(location.lat, location.lon);
         renderSchoolCards();
         map.setView([location.lat, location.lon], 13);
-        setStatus('Adres gevonden. Scholen staan hieronder van dichtbij naar verder.');
+        setStatus(t('mapStatusFound','Adres gevonden. Scholen staan hieronder van dichtbij naar verder.'));
       } catch (error) {
         console.error(error);
-        setStatus('Zoeken mislukt. Controleer het adres en probeer opnieuw.');
+        setStatus(t('mapStatusFailed','Zoeken mislukt. Controleer het adres en probeer opnieuw.'));
       } finally {
         searchButton.disabled = false;
       }
@@ -709,16 +734,23 @@
 
     updateCityCounts();
     applyAllFilters();
+
+    document.addEventListener('languageChanged', () => {
+      applyAllFilters();
+      if (!mapShell.classList.contains('is-fullscreen')) {
+        fullscreenMapButton.textContent = t('mapFullscreen','Schermvullend');
+      }
+    });
   </script>
 
   <button id="menuToggle">➤</button>
 
   <nav id="sideMenu">
-    <a href="pagina1.html">Schoolinformatie</a>
-    <a href="pagina2.html">Welke school past bij jouw kind?</a>
-    <a href="pagina3.html">Onze scholen</a>
-    <a href="pagina4.html">Contact</a>
-    <a href="index.html" style="padding: 40px; display:block;"> home </a>
+    <a href="pagina1.html" data-i18n="navSchoolInfo">Schoolinformatie</a>
+    <a href="pagina2.html" data-i18n="navSchoolFit">Welke school past bij jouw kind?</a>
+    <a href="pagina3.html" data-i18n="navSchools">Onze scholen</a>
+    <a href="pagina4.html" data-i18n="navContact">Contact</a>
+    <a href="index.html" style="padding: 40px; display:block;" data-i18n="navHome">Home</a>
   </nav>
   <script src="app.js"></script>
 </body>

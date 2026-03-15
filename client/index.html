@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Home</title>
+  <title data-i18n="metaTitleHome">Home</title>
   <link rel="stylesheet" href="/style.css">
 </head>
 
-<body class="index-page" style="
+<body class="index-page home-page" style="
   margin: 0;
   height: 100vh;
   background-image: url('/images/achtergrond2.png');
@@ -16,29 +16,39 @@
   background-repeat: no-repeat;
 ">
   <div class="top-overlay-image" aria-hidden="true"></div>
+  <div class="translate-controls" id="translateControls">
+    <button id="languageToggle" class="language-toggle" type="button" aria-expanded="false" aria-controls="languageMenu" aria-label="Kies een taal" data-i18n-aria-label="translateAria">
+      <span id="languageToggleFlag">🇳🇱 / 🇳🇱</span>
+    </button>
+    <div id="languageMenu" class="language-menu" hidden>
+      <button type="button" data-language-option="nl">🇳🇱 NL</button>
+      <button type="button" data-language-option="en">🇬🇧 EN</button>
+      <button type="button" data-language-option="de">🇩🇪 DE</button>
+      <button type="button" data-language-option="fr">🇫🇷 FR</button>
+      <button type="button" data-language-option="es">🇪🇸 ES</button>
+    </div>
+    <label for="languageSelect" class="sr-only" data-i18n="translateLabel">Vertaal de hele pagina:</label>
+    <select id="languageSelect" aria-label="Kies een taal" class="sr-only" data-i18n-aria-label="translateAria">
+      <option value="nl">Nederlands</option>
+      <option value="en">English</option>
+      <option value="de">Deutsch</option>
+      <option value="fr">Français</option>
+      <option value="es">Español</option>
+    </select>
+  </div>
   <nav id="sideMenu">
-  <a href="pagina1.html">Schoolinformatie</a>
-  <a href="pagina2.html">Welke school past bij jouw kind?</a>
-  <a href="pagina3.html">Onze scholen</a>
-  <a href="pagina4.html">Contact</a>
+    <a href="pagina1.html" data-i18n="navSchoolInfo">Schoolinformatie</a>
+    <a href="pagina2.html" data-i18n="navSchoolFit">Welke school past bij jouw kind?</a>
+    <a href="pagina3.html" data-i18n="navSchools">Onze scholen</a>
+    <a href="pagina4.html" data-i18n="navContact">Contact</a>
   </nav>
-  <!-- Slideshow -->
+
   <div class="slideshow-container2">
-    <div class="slide">
-      <img src="images/slideshow1.png">
-    </div>
-    <div class="slide">
-      <img src="images/slideshow2.png">
-    </div>  
-    <div class="slide">
-      <img src="images/slideshow3.png">
-    </div>
-    <div class="slide">
-      <img src="images/slideshow4.png">
-    </div>
-    <div class="slide">
-      <img src="images/slideshow5.png">
-    </div>
+    <div class="slide"><img src="images/slideshow1.png" alt=""></div>
+    <div class="slide"><img src="images/slideshow2.png" alt=""></div>
+    <div class="slide"><img src="images/slideshow3.png" alt=""></div>
+    <div class="slide"><img src="images/slideshow4.png" alt=""></div>
+    <div class="slide"><img src="images/slideshow5.png" alt=""></div>
   </div>
 
   <button id="menuToggle">➤</button>

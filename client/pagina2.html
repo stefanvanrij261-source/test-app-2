@@ -3,27 +3,74 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Welke school past bij jou kind?</title>
+  <title>Welke school past bij jouw kind?</title>
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="quiz-page">
+  <button id="menuToggle" aria-label="Open menu">➤</button>
 
-<h1 style="text-align: center; color: #38B6FF; margin-top: 50px;">Welke school past bij jouw kind?</h1>
-
-</body>
-</html>
-
-<!-- Arrow button -->
-  <button id="menuToggle">➤</button>
-
-  <!-- Side menu -->
   <nav id="sideMenu">
-    <a href="pagina1.html">Schoolinformatie</a>
-    <a href="pagina2.html">Welke school past bij jouw kind?</a>
-    <a href="pagina3.html">Onze scholen</a>
-    <a href="pagina4.html">Contact</a>
-    <a href="index.html" style="padding: 40px; display:block;"> home </a>
+    <a href="pagina1.html" data-i18n="navSchoolInfo">Schoolinformatie</a>
+    <a href="pagina2.html" data-i18n="navSchoolFit">Welke school past bij jouw kind?</a>
+    <a href="pagina3.html" data-i18n="navSchools">Onze scholen</a>
+    <a href="pagina4.html" data-i18n="navContact">Contact</a>
+    <a href="index.html" style="padding: 40px; display:block;" data-i18n="navHome">Home</a>
   </nav>
-   <script src="app.js"></script>
+
+  <div class="translate-controls" id="translateControls">
+    <button id="languageToggle" class="language-toggle" type="button" aria-expanded="false" aria-controls="languageMenu" aria-label="Kies een taal">
+      <span id="languageToggleFlag">🇳🇱 / 🇳🇱</span>
+    </button>
+    <div id="languageMenu" class="language-menu" hidden>
+      <button type="button" data-language-option="nl">🇳🇱 NL</button>
+      <button type="button" data-language-option="en">🇬🇧 EN</button>
+      <button type="button" data-language-option="de">🇩🇪 DE</button>
+      <button type="button" data-language-option="fr">🇫🇷 FR</button>
+      <button type="button" data-language-option="es">🇪🇸 ES</button>
+    </div>
+    <label for="languageSelect" class="sr-only" data-i18n="translateLabel">Vertaal de hele pagina:</label>
+    <select id="languageSelect" aria-label="Kies een taal" class="sr-only">
+      <option value="nl">Nederlands</option>
+      <option value="en">English</option>
+      <option value="de">Deutsch</option>
+      <option value="fr">Français</option>
+      <option value="es">Español</option>
+    </select>
+  </div>
+
+  <main class="quiz-wrapper">
+    <header class="quiz-header">
+      <p class="quiz-kicker" data-i18n="quizKicker">PCPO Schoolmatch</p>
+      <h1 data-i18n="quizTitle">welke school past bij jouw kind?</h1>
+      <p class="quiz-subtitle" data-i18n="quizSubtitle">Ontdek in een paar stappen welke school het best aansluit.</p>
+    </header>
+
+    <section class="quiz-card" aria-live="polite">
+      <div id="quizIntro" class="quiz-intro">
+        <label for="quizAddressInput" data-i18n="quizAddressLabel">Vul eerst je adres in:</label>
+        <div class="quiz-address-row">
+          <input id="quizAddressInput" type="text" data-i18n-placeholder="quizAddressPlaceholder" placeholder="Bijvoorbeeld: Achterom 70, Barendrecht">
+          <button id="quizAddressStart" type="button" data-i18n="quizAddressButton">Start quiz</button>
+        </div>
+        <p id="quizAddressStatus" class="quiz-status" aria-live="polite"></p>
+      </div>
+
+      <div id="quizQuestionWrap" class="quiz-question-wrap" hidden>
+        <p id="quizProgress" class="quiz-progress"></p>
+        <h2 id="quizQuestion" class="quiz-question"></h2>
+        <div id="quizOptions" class="quiz-options"></div>
+      </div>
+
+      <div id="quizResults" class="quiz-results" hidden>
+        <h2 data-i18n="quizResultsTitle">Ranglijst best passende scholen</h2>
+        <p id="quizTopMatch" class="quiz-top"></p>
+        <ol id="quizRanking"></ol>
+        <a id="quizReadMoreLink" class="quiz-read-more" href="pagina3.html"></a>
+        <button id="restartQuiz" type="button" data-i18n="quizRestart">Quiz opnieuw doen</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
 </body>
 </html>
