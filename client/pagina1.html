@@ -6,8 +6,264 @@
   <title data-i18n="metaTitleInfo">Wist je dat?</title>
   <link rel="stylesheet" href="style.css">
   <style>
+    body.pagina1-page {
+      position: relative !important;
+    }
+
     .pagina1-page #menuToggle {
       border: 1.5px solid #fff !important;
+      z-index: 1001 !important;
+    }
+
+    .translate-controls {
+      z-index: 1001 !important;
+    }
+
+    /* Video Section Styling */
+    .video-section {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      z-index: 100;
+      width: fit-content;
+      scale: 0.8;
+    }
+
+    /* Video 1: Geel (Linksboven - Origineel) */
+    .video-section.video-1 {
+      top: -13px !important;
+      left: -85px !important;
+    }
+
+    /* Video 2: Grijs (Rechtsboven) */
+    .video-section.video-2 {
+      top: -15px !important;
+      right: 170px !important;
+      left: auto !important;
+    }
+
+    /* Video 3: Rood (Rechtsmidden) */
+    .video-section.video-3 {
+      top: 100px !important;
+      right: -35px !important;
+      left: auto !important;
+      scale: 0.7
+    }
+
+    /* Video 4: Blauw (Linksonder) */
+    .video-section.video-4 {
+      bottom: 180px !important;
+      left: -85px !important;
+      top: auto !important;
+    }
+
+    .video-cube {
+      position: relative;
+      width: 380px;
+      aspect-ratio: 16 / 9;
+      border: 8px solid #000;
+      border-radius: 8px 8px 0 0;
+      overflow: hidden;
+      cursor: pointer;
+      background: #000;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+      padding: 0;
+    }
+
+    /* Video 3 (Rood): Langer dan breed (9:16) met kleinere width */
+    .video-section.video-3 .video-cube {
+      width: 280px;
+      aspect-ratio: 14 / 16;
+    }
+
+    .video-cube:hover {
+      transform: scale(1.02);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .video-cube__thumbnail {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .video-cube__play {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 60px;
+      color: white;
+      background: rgba(0, 0, 0, 0.6);
+      width: 100px;
+      height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: background 0.3s ease;
+      border: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .video-section__title {
+      font-size: 22px;
+      font-weight: 900;
+      color: #fff;
+      margin: 0;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      padding: 16px 20px;
+      border-radius: 0 0 8px 8px;
+      text-align: center;
+      line-height: 1.2;
+      width: 400px;
+    }
+
+    /* Video 3 titel aanpassen aan smallere width */
+    .video-section.video-3 .video-section__title {
+      width: 280px;
+    }
+
+    /* Geel (Video 1) */
+    .video-section.video-1 .video-section__title {
+      background: linear-gradient(90deg, #FFD700 0%, #FFA500 100%);
+    }
+
+    /* Grijs (Video 2) */
+    .video-section.video-2 .video-section__title {
+      background: linear-gradient(90deg, #A0A0A0 0%, #808080 100%);
+    }
+
+    /* Rood (Video 3) */
+    .video-section.video-3 .video-section__title {
+      background: linear-gradient(90deg, #FF4444 0%, #CC0000 100%);
+    }
+
+    /* Blauw (Video 4) */
+    .video-section.video-4 .video-section__title {
+      background: linear-gradient(90deg, #4477FF 0%, #0055CC 100%);
+    }
+
+    /* Video Modal */
+    .video-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.95);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      padding: 20px;
+    }
+
+    .video-modal.open {
+      display: flex;
+    }
+
+    .video-modal__close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
+      background: #fff;
+      border: none;
+      border-radius: 50%;
+      font-size: 30px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s ease;
+      z-index: 10000;
+    }
+
+    .video-modal__close:hover {
+      transform: scale(1.1);
+    }
+
+    .video-modal__frame {
+      width: 100%;
+      max-width: 1000px;
+      aspect-ratio: 16 / 9;
+      border: 5px solid #fff;
+      border-radius: 12px;
+      box-shadow: 0 0 40px rgba(255, 255, 255, 0.3);
+    }
+
+    /* Car */
+    .pagina1-car {
+      position: fixed;
+      bottom: 80px;
+      left: -200px;
+      width: 200px;
+      height: auto;
+      animation: driveCar 18s infinite ease-in-out;
+      z-index: 50;
+    }
+
+    @keyframes driveCar {
+      0% {
+        left: -200px;
+      }
+      50% {
+        left: calc(100vw + 50px);
+      }
+      100% {
+        left: calc(100vw + 50px);
+      }
+    }
+
+    /* Responsive */
+    @media (max-width: 1200px) {
+      .video-section {
+        top: 80px;
+        left: 50px;
+      }
+
+      .video-cube {
+        width: 350px;
+      }
+
+      .video-section__title {
+        width: 350px;
+        font-size: 20px;
+        padding: 14px 16px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .video-section {
+        top: 60px;
+        left: 20px;
+      }
+
+      .video-cube {
+        width: 300px;
+        border-width: 6px;
+      }
+
+      .video-cube__play {
+        font-size: 50px;
+        width: 80px;
+        height: 80px;
+      }
+
+      .video-section__title {
+        width: 300px;
+        font-size: 18px;
+        padding: 12px 14px;
+      }
+
+      .pagina1-car {
+        width: 150px;
+        bottom: 60px;
+      }
     }
   </style>
 </head>
@@ -38,7 +294,8 @@
     </select>
   </div>
 
-  <section class="video-section">
+  <!-- Video 1: Geel (Linksboven) -->
+  <section class="video-section video-1">
     <button
       id="videoCubeTrigger"
       class="video-cube"
@@ -47,11 +304,63 @@
       title="Bekijk de video"
       data-i18n-aria-label="videoOpen"
       data-i18n-title="videoOpen"
+      data-video-id="Y0fItGyUNPs"
     >
       <img src="https://img.youtube.com/vi/Y0fItGyUNPs/maxresdefault.jpg" alt="Thumbnail van de video" class="video-cube__thumbnail" data-i18n-alt="videoThumbAlt">
       <span class="video-cube__play">▶</span>
     </button>
     <h1 class="video-section__title" data-i18n="pageWorkAtPcpo">Werken bij PCPO</h1>
+  </section>
+
+  <!-- Video 2: Grijs (Rechtsboven) -->
+  <section class="video-section video-2">
+    <button
+      class="video-cube"
+      type="button"
+      aria-label="Open video in volledig scherm"
+      title="Bekijk de video"
+      data-i18n-aria-label="videoOpen"
+      data-i18n-title="videoOpen"
+      data-video-id="0g3E1cTkfLY"
+    >
+      <img src="https://img.youtube.com/vi/0g3E1cTkfLY/maxresdefault.jpg" alt="Een kijkje op één van onze scholen" class="video-cube__thumbnail">
+      <span class="video-cube__play">▶</span>
+    </button>
+    <h2 class="video-section__title" data-i18n="videoText2">Een kijkje op één van onze scholen</h2>
+  </section>
+
+  <!-- Video 3: Rood (Rechtsmidden) - LANGER DAN BREED -->
+  <section class="video-section video-3">
+    <button
+      class="video-cube"
+      type="button"
+      aria-label="Open video in volledig scherm"
+      title="Bekijk de video"
+      data-i18n-aria-label="videoOpen"
+      data-i18n-title="videoOpen"
+      data-video-id="SQ2LAoIaPbc"
+    >
+      <img src="https://img.youtube.com/vi/SQ2LAoIaPbc/maxresdefault.jpg" alt="Wat doet een rekenspecialist op een school" class="video-cube__thumbnail">
+      <span class="video-cube__play">▶</span>
+    </button>
+    <h2 class="video-section__title" data-i18n="videoText3">Wat doet een rekenspecialist op een school</h2>
+  </section>
+
+  <!-- Video 4: Blauw (Linksonder) -->
+  <section class="video-section video-4">
+    <button
+      class="video-cube"
+      type="button"
+      aria-label="Open video in volledig scherm"
+      title="Bekijk de video"
+      data-i18n-aria-label="videoOpen"
+      data-i18n-title="videoOpen"
+      data-video-id="sKfG4DSEVc4"
+    >
+      <img src="https://img.youtube.com/vi/sKfG4DSEVc4/maxresdefault.jpg" alt="Wat doet een kleuterjuf" class="video-cube__thumbnail">
+      <span class="video-cube__play">▶</span>
+    </button>
+    <h2 class="video-section__title" data-i18n="videoText4">Wat doet een kleuterjuf</h2>
   </section>
 
   <div id="videoModal" class="video-modal" aria-hidden="true">
@@ -68,8 +377,8 @@
     ></iframe>
   </div>
 
-  <img class="pagina1-car" src="images/lange.auto" alt="" aria-hidden="true">
-  <button id="menuToggle">➤</button>
+  <img class="pagina1-car" src="images/lange.auto.png" alt="" aria-hidden="true">
+  <button id="menuToggle" data-i18n-aria-label="navSchoolInfo">➤</button>
 
   <nav id="sideMenu">
     <a href="pagina1.html" data-i18n="navSchoolInfo">Schoolinformatie</a>
@@ -80,5 +389,46 @@
   </nav>
 
   <script src="app.js"></script>
+  
+  <script>
+    // Extra video handler voor alle video buttons
+    document.addEventListener('DOMContentLoaded', () => {
+      const videoModal = document.getElementById('videoModal');
+      const videoModalFrame = document.getElementById('videoModalFrame');
+      const videoModalClose = document.getElementById('videoModalClose');
+      const videoCubes = document.querySelectorAll('.video-cube');
+
+      videoCubes.forEach(button => {
+        button.addEventListener('click', (e) => {
+          const videoId = button.getAttribute('data-video-id');
+          if (videoId) {
+            videoModalFrame.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+            videoModal.classList.add('open');
+            videoModal.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden';
+          }
+        });
+      });
+
+      videoModalClose.addEventListener('click', () => {
+        videoModal.classList.remove('open');
+        videoModal.setAttribute('aria-hidden', 'true');
+        videoModalFrame.src = '';
+        document.body.style.overflow = 'auto';
+      });
+
+      videoModal.addEventListener('click', (e) => {
+        if (e.target === videoModal) {
+          videoModalClose.click();
+        }
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && videoModal.classList.contains('open')) {
+          videoModalClose.click();
+        }
+      });
+    });
+  </script>
 </body>
 </html>

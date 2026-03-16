@@ -69,7 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const baseNl = {
     pageTitle: "Contact",
     translateLabel: "Vertaal de hele pagina:",
-    navSchoolInfo: "Schoolinformatie",
+    navSchoolInfo: "Over PCPO",
     navSchoolFit: "Welke school past bij jouw kind?",
     navSchools: "Onze scholen",
     navContact: "Contact",
@@ -197,7 +197,10 @@ document.addEventListener("DOMContentLoaded", () => {
     quizO9H: "H. Diverse school",
     quizO9I: "I. Samenwerking met ouders",
     quizO9J: "J. Veel persoonlijke aandacht",
-    quizO9K: "K. Internationale school"
+    quizO9K: "K. Internationale school",
+    videoText2: "Een kijkje op één van onze scholen",
+    videoText3: "Wat doet een rekenspecialist op een school",
+    videoText4: "Wat doet een kleuterjuf",
   };
 
   const i18n = {
@@ -205,7 +208,7 @@ document.addEventListener("DOMContentLoaded", () => {
     en: {
       pageTitle: "Contact",
       translateLabel: "Translate the full page:",
-      navSchoolInfo: "School information",
+      navSchoolInfo: "About PCPO",
       navSchoolFit: "Which school fits your child?",
       navSchools: "Our schools",
       navContact: "Contact",
@@ -333,12 +336,15 @@ document.addEventListener("DOMContentLoaded", () => {
       quizO9H: "H. Diverse school",
       quizO9I: "I. Cooperation with parents",
       quizO9J: "J. Lots of personal attention",
-      quizO9K: "K. International school"
+      quizO9K: "K. International school",
+      videoText2: "A glimpse into one of our schools",
+      videoText3: "What does a mathematics specialist do in a school",
+      videoText4: "What does a nursery teacher do",
     },
     de: {
       pageTitle: "Kontakt",
       translateLabel: "Gesamte Seite übersetzen:",
-      navSchoolInfo: "Schulinformationen",
+      navSchoolInfo: "Über PCPO",
       navSchoolFit: "Welche Schule passt zu Ihrem Kind?",
       navSchools: "Unsere Schulen",
       navContact: "Kontakt",
@@ -466,12 +472,15 @@ document.addEventListener("DOMContentLoaded", () => {
       quizO9H: "H. Vielfältige Schule",
       quizO9I: "I. Zusammenarbeit mit Eltern",
       quizO9J: "J. Viel persönliche Aufmerksamkeit",
-      quizO9K: "K. Internationale Schule"
+      quizO9K: "K. Internationale Schule",    
+      videoText2: "Ein Blick in eine unserer Schulen",
+      videoText3: "Was macht ein Mathematik-Spezialist in einer Schule",
+      videoText4: "Was macht eine Kindergärtner",
     },
     fr: {
       pageTitle: "Contact",
       translateLabel: "Traduire toute la page :",
-      navSchoolInfo: "Informations scolaires",
+      navSchoolInfo: "À propos de PCPO",
       navSchoolFit: "Quelle école convient à votre enfant ?",
       navSchools: "Nos écoles",
       navContact: "Contact",
@@ -599,12 +608,15 @@ document.addEventListener("DOMContentLoaded", () => {
       quizO9H: "H. École diversifiée",
       quizO9I: "I. Collaboration avec les parents",
       quizO9J: "J. Beaucoup d’attention personnelle",
-      quizO9K: "K. École internationale"
+      quizO9K: "K. École internationale",
+      videoText2: "Un aperçu de l'une de nos écoles",
+      videoText3: "Que fait un spécialiste en mathématiques à l'école",
+      videoText4: "Que fait une enseignante de maternelle",
     },
     es: {
       pageTitle: "Contacto",
       translateLabel: "Traducir toda la página:",
-      navSchoolInfo: "Información escolar",
+      navSchoolInfo: "Acerca de PCPO",
       navSchoolFit: "¿Qué escuela se adapta a tu hijo?",
       navSchools: "Nuestras escuelas",
       navContact: "Contacto",
@@ -732,7 +744,10 @@ document.addEventListener("DOMContentLoaded", () => {
       quizO9H: "H. Escuela diversa",
       quizO9I: "I. Colaboración con padres",
       quizO9J: "J. Mucha atención personal",
-      quizO9K: "K. Escuela internacional"
+      quizO9K: "K. Escuela internacional",
+      videoText2: "Un vistazo a una de nuestras escuelas",
+      videoText3: "¿Qué hace un especialista en matemáticas en una escuela?",
+      videoText4: "¿Qué hace una maestra de primaria?",
     }
   };
 
