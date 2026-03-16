@@ -9,6 +9,54 @@
     .contact-page #menuToggle {
       border: 1.5px solid #fff !important;
     }
+
+    /* Chatbot Robot Button */
+    .chat-toggle {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      border: none;
+      background: linear-gradient(135deg, #00bcd4 0%, #0097a7 100%);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(0, 188, 212, 0.4);
+      z-index: 999;
+      transition: all 0.3s ease;
+      padding: 0;
+    }
+
+    .chat-toggle:hover {
+      box-shadow: 0 6px 20px rgba(0, 188, 212, 0.6);
+      transform: scale(1.1);
+    }
+
+    .chat-toggle:active {
+      transform: scale(0.95);
+    }
+
+    .robot-icon {
+      width: 50px;
+      height: 50px;
+      object-fit: contain;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .chat-toggle {
+        width: 65px;
+        height: 65px;
+      }
+      
+      .robot-icon {
+        width: 45px;
+        height: 45px;
+      }
+    }
   </style>
 </head>
 <body class="contact-page">
@@ -21,30 +69,31 @@
     <a href="pagina4.html" data-i18n="navContact">Contact</a>
     <a href="index.html" style="padding: 40px; display:block;" data-i18n="navHome">Home</a>
   </nav>
-<div class="translate-controls" id="translateControls">
-  <button id="languageToggle" class="language-toggle" type="button" aria-expanded="false" aria-controls="languageMenu" aria-label="Kies een taal">
-    <span id="languageToggleFlag">🇳🇱 / 🇳🇱</span>
-  </button>
-  <div id="languageMenu" class="language-menu" hidden>
-    <button type="button" data-language-option="nl">🇳🇱 NL</button>
-    <button type="button" data-language-option="en">🇬🇧 EN</button>
-    <button type="button" data-language-option="de">🇩🇪 DE</button>
-    <button type="button" data-language-option="fr">🇫🇷 FR</button>
-    <button type="button" data-language-option="es">🇪🇸 ES</button>
+
+  <div class="translate-controls" id="translateControls">
+    <button id="languageToggle" class="language-toggle" type="button" aria-expanded="false" aria-controls="languageMenu" aria-label="Kies een taal">
+      <span id="languageToggleFlag">🇳🇱 / 🇳🇱</span>
+    </button>
+    <div id="languageMenu" class="language-menu" hidden>
+      <button type="button" data-language-option="nl">🇳🇱 NL</button>
+      <button type="button" data-language-option="en">🇬🇧 EN</button>
+      <button type="button" data-language-option="de">🇩🇪 DE</button>
+      <button type="button" data-language-option="fr">🇫🇷 FR</button>
+      <button type="button" data-language-option="es">🇪🇸 ES</button>
+    </div>
+    <label for="languageSelect" class="sr-only">Vertaal de hele pagina:</label>
+    <select id="languageSelect" aria-label="Kies een taal" class="sr-only">
+      <option value="nl">Nederlands</option>
+      <option value="en">English</option>
+      <option value="de">Deutsch</option>
+      <option value="fr">Français</option>
+      <option value="es">Español</option>
+    </select>
   </div>
-  <label for="languageSelect" class="sr-only">Vertaal de hele pagina:</label>
-  <select id="languageSelect" aria-label="Kies een taal" class="sr-only">
-    <option value="nl">Nederlands</option>
-    <option value="en">English</option>
-    <option value="de">Deutsch</option>
-    <option value="fr">Français</option>
-    <option value="es">Español</option>
-  </select>
-</div>
+
   <main class="contact-wrapper">
     <header class="contact-header">
       <h1 data-i18n="pageTitle">Contact</h1>
-
     </header>
 
     <section class="contact-cards" aria-label="Contactinformatie">
@@ -99,7 +148,9 @@
     </section>
   </main>
 
-  <button id="chatToggle" class="chat-toggle" aria-expanded="false" aria-controls="chatbotPanel">Chat</button>
+  <button id="chatToggle" class="chat-toggle" aria-expanded="false" aria-controls="chatbotPanel" aria-label="Open chatbot">
+    <img src="images/robot.png" alt="Chatbot" class="robot-icon">
+  </button>
 
   <section id="chatbotPanel" class="chatbot" aria-live="polite" hidden>
     <div class="chat-header">
@@ -126,7 +177,62 @@
     <button id="chatReset" class="chat-reset" type="button" data-i18n="chatReset">Chat legen</button>
   </section>
 
+  <!-- ✅ LANGUAGE PERSISTENCE - LAAD DIT EERST -->
+  <script>
+    (function() {
+      const LANGUAGE_KEY = "pcpo-language";
+      const VALID_LANGS = ["nl", "en", "de", "fr", "es"];
+      
+      // Haal opgeslagen taal op
+      const saved = localStorage.getItem(LANGUAGE_KEY);
+      if (saved && VALID_LANGS.includes(saved)) {
+        window.__PCPO_LANGUAGE__ = saved;
+      } else {
+        // Detecteer browser taal
+        const browser = (navigator.language || "nl").slice(0, 2).toLowerCase();
+        window.__PCPO_LANGUAGE__ = VALID_LANGS.includes(browser) ? browser : "nl";
+      }
+      
+      // Zet de taal in localStorage
+      localStorage.setItem(LANGUAGE_KEY, window.__PCPO_LANGUAGE__);
+    })();
+  </script>
+
+  <!-- ✅ MAIN SCRIPTS -->
   <script src="app.js"></script>
   <script src="chat.js"></script>
+
+  <!-- ✅ ZORG DAT TAAL OPGESLAGEN BLIJFT -->
+  <script>
+    (function() {
+      const LANGUAGE_KEY = "pcpo-language";
+      const VALID_LANGS = ["nl", "en", "de", "fr", "es"];
+      
+      // Luister naar taal veranderingen van app.js
+      document.addEventListener("languageChanged", (e) => {
+        if (e.detail && e.detail.language && VALID_LANGS.includes(e.detail.language)) {
+          localStorage.setItem(LANGUAGE_KEY, e.detail.language);
+        }
+      });
+      
+      // Bij page load/refresh: zorg dat opgeslagen taal wordt gebruikt
+      window.addEventListener("load", () => {
+        const saved = localStorage.getItem(LANGUAGE_KEY);
+        if (saved && VALID_LANGS.includes(saved) && window.setAppLanguage) {
+          window.setAppLanguage(saved);
+        }
+      });
+      
+      // Bij terug/vooruit navigatie
+      window.addEventListener("pageshow", (e) => {
+        if (e.persisted) {
+          const saved = localStorage.getItem(LANGUAGE_KEY);
+          if (saved && VALID_LANGS.includes(saved) && window.setAppLanguage) {
+            window.setAppLanguage(saved);
+          }
+        }
+      });
+    })();
+  </script>
 </body>
 </html>

@@ -1204,9 +1204,12 @@ document.addEventListener("DOMContentLoaded", () => {
     document.addEventListener("languageChanged", updateQuizStaticTexts);
     updateQuizStaticTexts();
     restartQuizFlow();
-  }
+  };
 
-  const defaultLanguage = detectStartLanguage();
+   // ✅ HAAL OPGESLAGEN TAAL OP - NIET DETECTEREN
+   // ✅ HAAL OPGESLAGEN TAAL OP - NIET DETECTEREN
+  const savedLanguage = localStorage.getItem("pcpo-language");
+  const defaultLanguage = savedLanguage && i18n[savedLanguage] ? savedLanguage : detectStartLanguage();
 
   if (languageSelect) {
     languageSelect.value = defaultLanguage;
@@ -1247,6 +1250,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       languageSelect.value = lang;
       setLanguage(lang);
+      localStorage.setItem("pcpo-language", lang);
       closeLanguageMenu();
     });
 
@@ -1262,6 +1266,32 @@ document.addEventListener("DOMContentLoaded", () => {
   window.getCurrentLanguage = () => currentLanguage;
   window.setAppLanguage = setLanguage;
 
+  // ✅ ZET OPGESLAGEN TAAL IN
   setLanguage(defaultLanguage);
 
+});
+
+/* ===== Onthoud gekozen taal tussen pagina's ===== */
+document.addEventListener("languageChanged", (e) => {
+  try {
+    localStorage.setItem("pcpo-language", e.detail.language);
+  } catch {}
+});
+
+/* ===== Zorg dat taal behouden blijft bij pagina wisseling ===== */
+window.addEventListener("load", () => {
+  const saved = localStorage.getItem("pcpo-language");
+  if (saved && window.setAppLanguage && window.getCurrentLanguage() !== saved) {
+    window.setAppLanguage(saved);
+  }
+});
+
+/* ===== Zorg dat taal correct blijft bij terug/vooruit navigatie ===== */
+window.addEventListener("pageshow", (e) => {
+  if (e.persisted) {
+    const saved = localStorage.getItem("pcpo-language");
+    if (saved && window.setAppLanguage) {
+      window.setAppLanguage(saved);
+    }
+  }
 });
